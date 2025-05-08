@@ -5,3 +5,9 @@ node_modules
 *logs.txt
 
 backend/logs.txt
+
+
+**/logs.txt
+
+logs.txt      
+*/logs.txt    
