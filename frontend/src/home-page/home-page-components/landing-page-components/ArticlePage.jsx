@@ -696,7 +696,7 @@ const ArticlePage = () => {
 
             return (
               <Link
-                to={`/articles/singlepost/${article._id}`}
+                to={`/articles/singlepost/${item._id}`}
                 underline="none"
                 color="inherit"
                 key={index}

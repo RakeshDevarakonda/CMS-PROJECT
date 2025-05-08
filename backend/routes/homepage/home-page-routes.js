@@ -59,17 +59,21 @@ homePageRouter.get("/getsinglepost/:id", async (req, res, next) => {
       throwError(400, "Invalid Id Format Please try again");
     }
 
-    const post = await Post.findById(req.params.id).populate(
-      "userId",
-      "name avatar"
-    );
+    const post = await Post.findOne({
+      _id: req.params.id,
+      status: { $nin: ["pending", "rejected", "draft", "deleted"] }, // Exclude posts with any of these statuses
+    }).populate("userId", "name avatar"); // Populate userId with 'name' and 'avatar'
 
     post.viewsCount += 1;
     await post.save();
 
-    const relatedArticles = await Post.find({ _id: { $ne: req.params.id } })
+    const relatedArticles = await Post.find({
+      _id: { $ne: req.params.id },
+      status: { $nin: ["rejected", "draft", "pending", "deleted"] }, // Exclude posts with these statuses
+    })
       .limit(3)
-      .populate("userId", "name avatar");
+      .sort({ createdAt: -1 }) // Optional: Sort by createdAt (newest first)
+      .populate("userId", "name avatar"); // Populate userId with 'name' and 'avatar'
     if (!post) return next(new Error("Post not found"));
 
     res.json({ post, relatedArticles });
