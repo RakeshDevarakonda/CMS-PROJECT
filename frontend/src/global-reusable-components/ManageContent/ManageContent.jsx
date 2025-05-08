@@ -240,7 +240,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     isLoading: userDataLoading,
     isFetching: fetchingusers,
     isSuccess: usersDataSuccesForAdmin,
-    refetch:usersRefetch
+    refetch: usersRefetch,
   } = fetchAllUsersInAdmin(manageuser, finalSearchUsername);
 
   useEffect(() => {
@@ -366,9 +366,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
           adminrefresh={adminrefresh}
           moderatorrefresh={moderatorrefresh}
           createrrefresh={createrrefresh}
-
           usersRefetch={usersRefetch}
-
           setRefreshKey={setRefreshKey}
           manageuser={manageuser}
         />

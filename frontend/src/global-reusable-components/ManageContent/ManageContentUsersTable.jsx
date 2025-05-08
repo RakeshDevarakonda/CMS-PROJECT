@@ -4,6 +4,7 @@ import {
   CheckCircle,
   RemoveRedEye,
 } from "@mui/icons-material";
+
 import {
   Box,
   Button,
@@ -29,6 +30,7 @@ import {
   setSelectedFilterType,
   toggleIsSearchModeratorName,
 } from "../../global-redux/ManageContentSlice";
+import { useQueryClient } from "@tanstack/react-query";
 
 // IOSSwitch styled component
 const IOSSwitch = styled((props) => (
@@ -67,6 +69,11 @@ const IOSSwitch = styled((props) => (
 }));
 
 export default function ManageContentUsersTable({ usersData, userDataType }) {
+
+const queryClient = useQueryClient();
+
+
+
   const getColor = (isActive) => {
     if (isActive) {
       return {
@@ -217,6 +224,7 @@ export default function ManageContentUsersTable({ usersData, userDataType }) {
                     size="small"
                     onClick={() => {
                       if (userDataType) {
+                        queryClient.refetchQueries(["fetchAllUsersInAdmin"]);
                         navigate(
                           `/${userDetails?.role}/managecontent/allcontent`
                         );
