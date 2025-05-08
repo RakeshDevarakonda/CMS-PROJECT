@@ -18,7 +18,7 @@ export async function updateAdminProfileDataApi(formData) {
     } else {
       errorMessage =
         error.response?.data?.message ||
-        "There was an error while fetching the post";
+        "There was an error while fetching the profile";
     }
     throw new Error(errorMessage);
   }
