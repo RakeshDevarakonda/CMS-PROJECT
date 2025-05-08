@@ -35,6 +35,8 @@ export default function ManageContentTableBody({
 }) {
   const { darkMode } = useSelector(globalReduxSelector);
 
+
+
   const { versionList } = useSelector(manageContentSelector);
   const theme = darkMode ? "dark" : "light";
 
@@ -68,7 +70,7 @@ export default function ManageContentTableBody({
         <TableCell>
           <Box
             sx={{
-              borderLeft: `3px solid ${statusStyle.bgColor}`,
+              borderLeft: `3px solid ${statusStyle?.bgColor}`,
               pl: 2,
               ml: 0.5,
             }}

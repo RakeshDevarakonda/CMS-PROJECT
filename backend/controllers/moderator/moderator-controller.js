@@ -114,8 +114,8 @@ export const getallmoderatorposts = async (req, res, next) => {
     const skip = page * limit;
     const statusFilter = contentStatusFilter?.toLowerCase();
 
-    let postQuery = { status: { $nin: ["draft"] } };
-    let postHistoryQuery = { status: { $nin: ["draft", "pending"] } };
+    let postQuery = { status: { $nin: ["draft","deleted"] } };
+    let postHistoryQuery = { status: { $nin: ["draft", "pending","deleted"] } };
 
     if (statusFilter === "pending") {
       postQuery.status = statusFilter;

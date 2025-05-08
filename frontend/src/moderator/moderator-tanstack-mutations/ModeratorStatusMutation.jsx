@@ -1,11 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateModeratorStatusApi } from "../moderator-apis/ModeratorStatusChangeApi";
-import { useDispatch } from "react-redux";
-import { setErrorAndSuccesDialogMessage, toggleBackdrop } from "../../global-redux/GlobalRedux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setErrorAndSuccesDialogMessage,
+  toggleBackdrop,
+} from "../../global-redux/GlobalRedux";
+import { manageContentSelector } from "../../global-redux/ManageContentSlice";
 
 export const updateModeratorStatusMutation = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+
+  const { contentTotalData } = useSelector(manageContentSelector);
 
   return useMutation({
     mutationKey: ["updatemoderatorstatusmutaion"],
@@ -19,6 +25,8 @@ export const updateModeratorStatusMutation = () => {
           buttonname: "Try Again",
         })
       );
+
+      console.log(contentTotalData);
 
       dispatch({
         type: "globalredux/toggleErrorAndSuccesDialog",
