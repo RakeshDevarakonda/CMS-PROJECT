@@ -24,7 +24,6 @@ import {
   signInSliceSelector,
 } from "./../home-page-redux/SignInSlice";
 
-
 // Components and utilities
 import { SignInMutation } from "../home-page-tanstack_mutations/SignInMutatation.jsx";
 import { colors } from "../../utils/Colors.jsx";
@@ -48,10 +47,9 @@ const SignInForm = () => {
     formData,
     errors,
     showPassword,
-    
+
     isSignInSubmitting,
   } = useSelector(signInSliceSelector);
-
 
   // Derived values
   const mode = darkMode ? "dark" : "light";
@@ -263,6 +261,46 @@ const SignInForm = () => {
               </Link>
             </Box>
 
+            <Box
+              sx={{
+                mb: 4,
+                width: "100%",
+                border: `1px solid ${currentColors.textSecondary}`,
+                borderRadius: 2,
+                p: 2,
+                backgroundColor: currentColors.background,
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                sx={{ mb: 1, fontWeight: "bold", color: currentColors.text }}
+              >
+                🧪 Test Login Credentials
+              </Typography>
+
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography
+                  variant="body2"
+                  sx={{ color: currentColors.textSecondary }}
+                >
+                  👤 <strong>creator:</strong> creator@gmail.com / creator123
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: currentColors.textSecondary }}
+                >
+                  👨‍💼 <strong>Moderator:</strong> moderator@gmail.com /
+                  moderator123
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: currentColors.textSecondary }}
+                >
+                  🛡️ <strong>Admin:</strong> admin@gmail.com / admin123
+                </Typography>
+              </Box>
+            </Box>
+
             <Button
               type="submit"
               fullWidth
@@ -310,8 +348,6 @@ const SignInForm = () => {
           </Box>
         </Paper>
       </Container>
-
-     
     </>
   );
 };
