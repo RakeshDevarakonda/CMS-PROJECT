@@ -54,7 +54,6 @@ const ManageContent = ({ statusfilter, userDataType }) => {
   const { themeColors, sortedData, displayedOpportunities, getStatusStyle } =
     useManageContentFunctions();
 
-
   const dispatch = useDispatch();
   const [refreshKey, setRefreshKey] = useState(Date.now());
   const {
@@ -78,10 +77,10 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     selectedFilterType,
     finalSearchUsername,
     isSearchModeratorName,
-
   } = useSelector(manageContentSelector);
 
-  const { darkMode, userDetails,showBackdrop } = useSelector(globalReduxSelector);
+  const { darkMode, userDetails, showBackdrop } =
+    useSelector(globalReduxSelector);
   const theme = darkMode ? "dark" : "light";
   const colors = themeColors[theme];
 
@@ -149,7 +148,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     refetch: createrrefresh,
     isError: isCreatorGetError,
     error: errorForCreatorGetContent,
-    isFetching:creatorIsFetching
+    isFetching: creatorIsFetching,
   } = useGetManageContentQuery(params, isCreator, manageuser);
 
   const {
@@ -159,7 +158,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     refetch: moderatorrefresh,
     isError: isModeratorGetError,
     error: errorForModeratorGetContent,
-    isFetching:moderatorIsFetching
+    isFetching: moderatorIsFetching,
   } = useGetModeratorManageContentQuery(params, isModerator, manageuser);
 
   const {
@@ -169,11 +168,11 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     refetch: adminrefresh,
     isError: isAdminGetError,
     error: errorForAdminGetContent,
-    isFetching:adminIsFetching
+    isFetching: adminIsFetching,
   } = useGetAdminContentQuery(params, isAdmin, manageuser);
 
-  const isFetching =adminIsFetching || moderatorIsFetching || creatorIsFetching
-  const isPostsLoading =adminLoading || moderatorLoading || creatorLoading
+  const isFetching =
+    adminIsFetching || moderatorIsFetching || creatorIsFetching;
 
   const isGetContentError =
     isCreatorGetError || isModeratorGetError || isAdminGetError;
@@ -239,7 +238,9 @@ const ManageContent = ({ statusfilter, userDataType }) => {
   const {
     data: usersDataForAdmin,
     isLoading: userDataLoading,
+    isFetching: fetchingusers,
     isSuccess: usersDataSuccesForAdmin,
+    refetch:usersRefetch
   } = fetchAllUsersInAdmin(manageuser, finalSearchUsername);
 
   useEffect(() => {
@@ -256,7 +257,6 @@ const ManageContent = ({ statusfilter, userDataType }) => {
       }
     }
   }, [usersDataForAdmin, usersDataSuccesForAdmin]);
-
 
   useEffect(() => {
     if (isSuccess && backendDataintable) {
@@ -342,7 +342,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleversiondata, refreshKey, versionList, versionposts]);
 
-  if ((isFirstLoad.current && loadingData) ) {
+  if (isFirstLoad.current && loadingData) {
     return <ManageContentTableSkeleton />;
   }
 
@@ -366,6 +366,9 @@ const ManageContent = ({ statusfilter, userDataType }) => {
           adminrefresh={adminrefresh}
           moderatorrefresh={moderatorrefresh}
           createrrefresh={createrrefresh}
+
+          usersRefetch={usersRefetch}
+
           setRefreshKey={setRefreshKey}
           manageuser={manageuser}
         />
@@ -395,8 +398,13 @@ const ManageContent = ({ statusfilter, userDataType }) => {
             fontWeight="bold"
             sx={{ fontSize: "1.5rem", color: "rgb(99, 102, 241)" }}
           >
-            {userDataType==="creator" ? "Creator List" : userDataType==="moderator" ? "Moderator List" : userDataType==="admin" ? "Admin List" : null || selectedFilterType }
-            {" "}
+            {userDataType === "creator"
+              ? "Creator List"
+              : userDataType === "moderator"
+              ? "Moderator List"
+              : userDataType === "admin"
+              ? "Admin List"
+              : null || selectedFilterType}{" "}
             ({contentDataCount?.totalCount})
           </Typography>
 
@@ -489,7 +497,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
                   )}
                 </TableRow>
               </TableHead>
-              {loadingData || userDataLoading || isFetching ? (
+              {loadingData || userDataLoading || isFetching || fetchingusers ? (
                 <ManageContentOnlyTableSkeleton manageuser={manageuser} />
               ) : (
                 <TableBody>
@@ -535,7 +543,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
 
       {contentOpenDateDialog && <ManageContentFunctions />}
 
-      {(isDeleting || showBackdrop  ) && <BackDropLoader />}
+      {(isDeleting || showBackdrop) && <BackDropLoader />}
     </>
   );
 };

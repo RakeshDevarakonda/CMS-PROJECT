@@ -328,6 +328,8 @@ export const changeUserActive = async (req, res, next) => {
         user.isActive ? "activated" : "deactivated"
       } successfully.`,
       isActive: user.isActive,
+      user,
+      role:user?.role
     });
   } catch (error) {
     next(error);

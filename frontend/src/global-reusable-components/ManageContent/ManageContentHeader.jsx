@@ -23,6 +23,7 @@ export default function ManageContentHeader({
   createrrefresh,
   setRefreshKey,
   manageuser,
+  usersRefetch,
 }) {
   const { darkMode, userDetails } = useSelector(globalReduxSelector);
   const theme = darkMode ? "dark" : "light";
@@ -147,6 +148,9 @@ export default function ManageContentHeader({
                   } else if (userDetails?.role === "admin") {
                     adminrefresh();
                   }
+                }
+                if (manageuser) {
+                  usersRefetch();
                 }
               }}
               aria-label="filter list"

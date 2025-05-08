@@ -11,6 +11,8 @@ export async function updateUsersAccountApi(userId) {
         withCredentials: true,
       }
     );
+
+    
     return response.data;
   } catch (error) {
     let errorMessage;
