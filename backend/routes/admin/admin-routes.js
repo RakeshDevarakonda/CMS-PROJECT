@@ -49,7 +49,7 @@ adminRouter.get(
   getSinglePostByAdmin
 );
 
-adminRouter.get("/stats", verifyjwtToken, checkRole("admin"), getAdminStats);
+adminRouter.get("/adminstats", verifyjwtToken, checkRole("admin"), getAdminStats);
 
 adminRouter.get(
   "/getadminversions",

@@ -8,6 +8,8 @@ import { uploadToCloudinary } from "../../utils/cloudinary.js";
 import bcrypt from "bcrypt";
 import { updateUserAnalytics } from "../../utils/user-post-update-analytics.js";
 import { updateModeratorAnalytics } from "../../utils/moderator-analytics.js";
+import { updateAdminAnalytics } from "../../utils/admin-analytics.js";
+import AdminAnalytics from "../../models/admin-analytics.js";
 
 const allowedStatuses = ["draft", "approved", "pending", "rejected", "removed"];
 
@@ -231,7 +233,7 @@ export const changePostStatusByAdmin = async (req, res, next) => {
       throwError(400, "Cannot change the status of older versions of posts.");
     }
 
-    const post = await Post.findById(postId)
+    const post = await Post.findById(postId);
     if (!post) {
       throwError(404, "Post not found.");
     }
@@ -265,11 +267,12 @@ export const changePostStatusByAdmin = async (req, res, next) => {
 
     await updateUserAnalytics(post.userId, "update", post.status, status);
 
+    await updateAdminAnalytics(post.status, status);
+
     post.status = status;
 
     const existingModerationIndex = post.moderatedBy.findIndex(
-      (mod) =>
-        mod.user.toString() === req.id.toString() && mod.role === "admin"
+      (mod) => mod.user.toString() === req.id.toString() && mod.role === "admin"
     );
 
     const moderationEntry = {
@@ -289,7 +292,6 @@ export const changePostStatusByAdmin = async (req, res, next) => {
     post.reason = reason && reason.trim().length > 0 ? reason : null;
 
     await post.save();
-
 
     await post.populate("moderatedBy.user", "name email role");
 
@@ -329,7 +331,7 @@ export const changeUserActive = async (req, res, next) => {
       } successfully.`,
       isActive: user.isActive,
       user,
-      role:user?.role
+      role: user?.role,
     });
   } catch (error) {
     next(error);
@@ -514,7 +516,89 @@ export const getSinglePostByAdmin = async (req, res, next) => {
     next(error);
   }
 };
-export const getAdminStats = async (req, res, next) => {};
+export const getAdminStats = async (req, res, next) => {
+  try {
+    let analytics = await AdminAnalytics.findOne();
+
+    if (!analytics) {
+      analytics = new AdminAnalytics({
+        totalPosts: 0,
+        creator: 0,
+        moderator: 0,
+        deleted: 0,
+        approved: 0,
+        pending: 0,
+        rejected: 0,
+      });
+      await analytics.save();
+    }
+
+    const statusSummary = {
+      totalPosts: analytics.totalPosts,
+      creator: analytics.creator,
+      moderator: analytics.moderator,
+      deleted: analytics.deleted,
+      approved: analytics.approved,
+      pending: analytics.pending,
+      rejected: analytics.rejected,
+    };
+
+    // Last 5 days admin stats
+    const fiveDaysAgo = new Date();
+    fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 4);
+
+    const adminStatusStats = await Post.aggregate([
+      {
+        $match: {
+          updatedAt: { $gte: fiveDaysAgo },
+        },
+      },
+      {
+        $project: {
+          date: { $dateToString: { format: "%Y-%m-%d", date: "$updatedAt" } },
+          status: 1,
+        },
+      },
+      {
+        $group: {
+          _id: { date: "$date", status: "$status" },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id.date": 1 } },
+    ]);
+
+    const statuses = ["approved", "rejected", "pending"];
+    const lastFiveDaysStats = {};
+
+    for (let i = 0; i < 5; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const formatted = date.toISOString().split("T")[0];
+      lastFiveDaysStats[formatted] = {};
+      statuses.forEach((status) => {
+        lastFiveDaysStats[formatted][status] = 0;
+      });
+    }
+
+    adminStatusStats.forEach(({ _id, count }) => {
+      const { date, status } = _id;
+      if (lastFiveDaysStats[date]) {
+        lastFiveDaysStats[date][status] = count;
+      }
+    });
+
+    res.status(200).json({
+      dataCount: statusSummary,
+      lastFiveDaysStats,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 
 export const getAllVersionsByAdmin = async (req, res, next) => {
   const { id, version, source } = req.query;
@@ -649,6 +733,11 @@ export const createPostByAdmin = async (req, res, next) => {
 
     const deletionResults = await deleteUrl(urls);
 
+    if (status === "pending") {
+      await updateAdminAnalytics(null, status);
+      await updateAdminAnalytics(null, addposts);
+    }
+
     res.status(201).json({
       success: true,
       message: "Post created successfully",
@@ -726,6 +815,9 @@ export const updateSinglePostByAdmin = async (req, res, next) => {
     const updatedUrls = [...urls, post.thumbnailImage];
 
     const deletionResults = updatedUrls ? await deleteUrl(updatedUrls) : [];
+
+    await updateAdminAnalytics(null, "pending");
+    await updateAdminAnalytics(null, "addposts");
 
     const postHistory = new PostHistory({
       postId: post._id,
@@ -834,6 +926,9 @@ export const deleteSinglePostByAdmin = async (req, res, next) => {
     }
 
     post.status = "deleted";
+
+    await updateAdminAnalytics(post.status, "deleted");
+
     await post.save();
 
     res.status(200).json({ message: "Post status changed to deleted" });

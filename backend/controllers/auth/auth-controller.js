@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
 import User from "../../models/user-model.js";
 import { throwError } from "../../utils/throw-error.js";
+import { updateAdminAnalytics } from "../../utils/admin-analytics.js";
 
 // Reusable function to validate email format
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -55,11 +56,15 @@ export const signupController = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const role="creator"
+    await updateAdminAnalytics(null,null,"creator")
+
     const newUser = new User({
       name: username,
       email,
       password: hashedPassword,
       isActive: true,
+      role
     });
 
     await newUser.save();

@@ -10,6 +10,7 @@ import { uploadToCloudinary } from "./../../utils/cloudinary.js";
 import { PostHistory } from "../../models/post-version-history.js";
 import { updateUserAnalytics } from "../../utils/user-post-update-analytics.js";
 import { UserAnalytics } from "../../models/creator-posts-analytics.js";
+import { updateAdminAnalytics } from "../../utils/admin-analytics.js";
 
 const allowedStatuses = ["draft", "approved", "pending", "rejected", "removed"];
 const isNonEmptyString = (val) =>
@@ -104,6 +105,12 @@ export const createPostController = async (req, res, next) => {
 
     const savedPost = await newPost.save();
     const deletionResults = await deleteUrl(parsedUrls);
+
+    if (status === "pending") {
+      await updateAdminAnalytics(null, status);
+
+      await updateAdminAnalytics(null, addposts);
+    }
 
     res.status(201).json({
       success: true,
@@ -261,7 +268,6 @@ export const getCreatorStatsController = async (req, res, next) => {
       totalCount: userAnalytics.totalPosts,
     };
 
-   
     const fiveDaysAgo = new Date();
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 4); // includes today
 
@@ -547,6 +553,8 @@ export const deletePost = async (req, res, next) => {
       );
     }
 
+    await updateAdminAnalytics(post.status, "deleted");
+
     await updateUserAnalytics(req.id, "delete", post.status, "deleted");
 
     // Update status to 'deleted'
@@ -692,6 +700,9 @@ export const updatePostController = async (req, res, next) => {
       thumbnailImage: newThumbnail,
       thumbnailType: thumbnailType,
     };
+
+    await updateAdminAnalytics(null, "pending");
+    await updateAdminAnalytics(null, "addposts");
 
     await updateUserAnalytics(req.id, "update", post.status, status);
 

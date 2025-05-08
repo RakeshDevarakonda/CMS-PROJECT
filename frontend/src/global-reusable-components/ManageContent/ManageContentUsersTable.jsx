@@ -69,10 +69,7 @@ const IOSSwitch = styled((props) => (
 }));
 
 export default function ManageContentUsersTable({ usersData, userDataType }) {
-
-const queryClient = useQueryClient();
-
-
+  const queryClient = useQueryClient();
 
   const getColor = (isActive) => {
     if (isActive) {

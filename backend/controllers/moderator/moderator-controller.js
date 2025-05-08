@@ -7,6 +7,7 @@ import { uploadToCloudinary } from "../../utils/cloudinary.js";
 import { deleteUrl } from "../../utils/DeleteUrls.js";
 import { updateModeratorAnalytics } from "../../utils/moderator-analytics.js";
 import ModeratortAnalytics from "../../models/moderator-analytics.js";
+import { updateAdminAnalytics } from "../../utils/admin-analytics.js";
 
 export const getModeratorStatsController = async (req, res, next) => {
   try {
@@ -266,6 +267,8 @@ export const changePostStatus = async (req, res, next) => {
         false
       );
     }
+
+    await updateAdminAnalytics(post.status, status);
 
     const existingModIndex = post.moderatedBy.findIndex(
       (mod) =>

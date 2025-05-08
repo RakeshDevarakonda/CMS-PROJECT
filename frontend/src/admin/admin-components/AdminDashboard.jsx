@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Card,
@@ -31,11 +31,10 @@ import {
   setStatusCounts,
   setDataCount,
   setTrendData,
+  adminDashboardSelector,
 } from "../../global-redux/AdminDashboardSlice.jsx";
-import {
-  globalReduxReducer,
-  globalReduxSelector,
-} from "../../global-redux/GlobalRedux.jsx";
+import { globalReduxSelector } from "../../global-redux/GlobalRedux.jsx";
+import { useGetAdminStatsQuery } from "../admin-tanstack-queries/AdminStatsQuery.jsx";
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -48,14 +47,14 @@ const AdminDashboard = () => {
       icon: <PieChart />,
       lightBg: "#4361ee15",
     },
-    TotalCreators: {
+    Creator: {
       bgColor: "#4cc9f0",
       gradientFrom: "#4cc9f0",
       gradientTo: "#4cc9f0",
       icon: <UserPlus />,
       lightBg: "#4cc9f015",
     },
-    TotalModerators: {
+    Moderator: {
       bgColor: "#3a86ff",
       gradientFrom: "#3a86ff",
       gradientTo: "#3a86ff",
@@ -92,15 +91,9 @@ const AdminDashboard = () => {
     },
   });
 
-  const dataCount = {
-    totalPosts: 24,
-    totalCreators: 5,
-    totalModerators: 5,
-    deleted: 5,
-    approved: 10,
-    pending: 7,
-    rejected: 2,
-  };
+  const { dataCount } = useSelector(adminDashboardSelector);
+
+  console.log(dataCount);
 
   const muiTheme = useMuiTheme();
   const isXs = useMediaQuery(muiTheme.breakpoints.down("sm"));
@@ -130,14 +123,68 @@ const AdminDashboard = () => {
   const currentTheme = themeColors[theme] || themeColors.light;
   const isDark = theme == "dark";
 
+  const {
+    data: statsData,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useGetAdminStatsQuery();
+
+  useEffect(() => {
+    if (isSuccess && statsData) {
+      console.log(statsData?.dataCount);
+      dispatch(setDataCount(statsData?.dataCount));
+    }
+
+    const statusConfig = getStatusConfig();
+
+    const statusData = statsData?.dataCount
+      ? Object.entries(statsData?.dataCount)
+          .filter(
+            ([key]) => !["moderator", "creator", "totalPosts"].includes(key)
+          )
+          .map(([status, value]) => {
+            const key = status.charAt(0).toUpperCase() + status.slice(1);
+            return {
+              name: key,
+              value,
+              color: statusConfig[key]?.bgColor || "#ccc",
+            };
+          })
+      : [];
+
+    const trend = [];
+    for (let i = 0; i <= 4; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split("T")[0];
+      const dayData = statsData?.lastFiveDaysStats?.[dateStr] || {
+        approved: 0,
+        rejected: 0,
+        pending: 0,
+      };
+
+      trend.push({
+        date: dateStr,
+        approved: dayData.approved || 0,
+        rejected: dayData.rejected || 0,
+        pending: dayData.pending || 0,
+      });
+    }
+
+    dispatch(setTrendData(trend));
+
+    dispatch(setStatusCounts(statusData));
+  }, [statsData, isSuccess]);
+
   const stats = useMemo(() => {
-    const totalPosts = dataCount.totalPosts || 0;
-    const totalCreators = dataCount.totalCreators || 0;
-    const totalModerators = dataCount.totalModerators || 0;
-    const approved = dataCount.approved || 0;
-    const pending = dataCount.pending || 0;
-    const rejected = dataCount.rejected || 0;
-    const deleted = dataCount.deleted || 0;
+    const totalPosts = dataCount?.totalPosts || 0;
+    const totalCreators = dataCount?.creator || 0;
+    const totalModerators = dataCount?.moderator || 0;
+    const approved = dataCount?.approved || 0;
+    const pending = dataCount?.pending || 0;
+    const rejected = dataCount?.rejected || 0;
+    const deleted = dataCount?.deleted || 0;
 
     return [
       {
@@ -199,66 +246,6 @@ const AdminDashboard = () => {
       },
     ];
   }, [dataCount]);
-
-  const statusConfig = getStatusConfig();
-
-  const statusData = dataCount
-    ? Object.entries(dataCount)
-        .filter(
-          ([key]) =>
-            !["totalModerators", "totalCreators", "totalPosts"].includes(key)
-        )
-        .map(([status, value]) => {
-          const key = status.charAt(0).toUpperCase() + status.slice(1);
-          return {
-            name: key,
-            value,
-            color: statusConfig[key]?.bgColor || "#ccc",
-          };
-        })
-    : [];
-
-  const trends = [
-    {
-      date: "2025-05-07",
-      approved: 2,
-      pending: 2,
-      rejected: 4,
-      deleted: 2,
-    },
-    {
-      date: "2025-05-06",
-      approved: 2,
-      pending: 3,
-      rejected: 0,
-      deleted: 3,
-    },
-    {
-      date: "2025-05-05",
-      approved: 2,
-      pending: 2,
-      rejected: 5,
-      deleted: 9,
-    },
-    {
-      date: "2025-05-04",
-      approved: 4,
-      pending: 7,
-      rejected: 4,
-      deleted: 0,
-    },
-    {
-      date: "2025-05-03",
-      approved: 0,
-      pending: 0,
-      rejected: 0,
-      deleted: 0,
-    },
-  ];
-
-  dispatch(setDataCount(dataCount));
-  dispatch(setTrendData(trends));
-  dispatch(setStatusCounts(statusData));
 
   return (
     <>
