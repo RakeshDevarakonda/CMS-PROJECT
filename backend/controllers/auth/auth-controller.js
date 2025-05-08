@@ -23,8 +23,8 @@ export const signupController = async (req, res, next) => {
     return throwError(400, "Username must be atleast 3 characters");
   }
 
-  if (username && username.length > 8) {
-    return throwError(400, "Username maximun of 8 characters");
+  if (username && username.length > 15) {
+    return throwError(400, "Username maximun of 15 characters");
   }
   if (!isValidEmail(email)) {
     return throwError(400, "Please enter a valid email");
