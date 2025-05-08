@@ -108,12 +108,12 @@ export const signinController = async (req, res, next) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: process.env.COOKIE_SECURE === "true", // boolean from string
+      sameSite: process.env.COOKIE_SAMESITE || "Lax", // fallback to "Lax"
       path: "/",
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
-
+    
     return res.status(200).json({
       message: "Sign-in successful",
       payload: {
