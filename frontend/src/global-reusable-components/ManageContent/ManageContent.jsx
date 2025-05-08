@@ -342,7 +342,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleversiondata, refreshKey, versionList, versionposts]);
 
-  if (isFirstLoad.current && loadingData) {
+  if ((isFirstLoad.current && loadingData) ) {
     return <ManageContentTableSkeleton />;
   }
 
@@ -489,7 +489,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
                   )}
                 </TableRow>
               </TableHead>
-              {loadingData || userDataLoading ? (
+              {loadingData || userDataLoading || isFetching ? (
                 <ManageContentOnlyTableSkeleton manageuser={manageuser} />
               ) : (
                 <TableBody>
@@ -535,7 +535,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
 
       {contentOpenDateDialog && <ManageContentFunctions />}
 
-      {(isDeleting || showBackdrop  || isFetching) && <BackDropLoader />}
+      {(isDeleting || showBackdrop  ) && <BackDropLoader />}
     </>
   );
 };
