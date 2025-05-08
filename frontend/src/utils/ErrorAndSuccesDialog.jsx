@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import {
   globalReduxSelector,
   setErrorAndSuccesDialogMessage,
+  toggleBackdrop,
   toggleErrorAndSuccesDialog,
 } from "../global-redux/GlobalRedux.jsx";
 import {
@@ -32,6 +33,7 @@ import {
   setContentTotalData,
   setModeratorPostStatusChange,
   toggleDeleting,
+
 } from "../global-redux/ManageContentSlice.jsx";
 import { deleteSinglePostMutation } from "../creator/creator-tanstack-mutations/DeleteSinglePostMutation.jsx";
 import { updateModeratorStatusMutation } from "../moderator/moderator-tanstack-mutations/ModeratorStatusMutation.jsx";
@@ -140,6 +142,7 @@ const ErrorAndSuccesDialog = () => {
 
     if (dialogeMessage?.buttonname == "Change Status") {
       updateAdminStatus({ ...adminPostStatusDetails, isChecked: true });
+      dispatch(toggleBackdrop())
     }
 
     if (dialogeMessage?.buttonname == "Update Status") {
@@ -149,6 +152,7 @@ const ErrorAndSuccesDialog = () => {
         reasonfor = rejectionReason;
       }
       if (userDetails?.role == "moderator") {
+        dispatch(toggleBackdrop())
         updateModeratorStatus({
           postId: statusChangeDetails.id,
           status: statusChangeDetails.status,
@@ -169,6 +173,8 @@ const ErrorAndSuccesDialog = () => {
         };
 
         updateAdminStatus(dataToSend);
+
+        dispatch(toggleBackdrop())
 
         dispatch(setAdminPostStatusDetails(dataToSend));
 

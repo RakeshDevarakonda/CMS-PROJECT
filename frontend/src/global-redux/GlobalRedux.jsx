@@ -3,11 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   darkMode: true,
   errorAndSuccesDialog: false,
-  errorAndSuccesDialogMessage:"",
+  errorAndSuccesDialogMessage: "",
   isUserLogged: false,
   userDetails: null,
   isAuthChecked: false,
   isUserLoggedout: false,
+  showBackdrop: false,
 };
 
 const globalReduxSlice = createSlice({
@@ -28,33 +29,42 @@ const globalReduxSlice = createSlice({
     setAuthChecked: (state, action) => {
       state.isAuthChecked = action.payload;
     },
-    setJustLoggedOut: (state,action) => {
+    setJustLoggedOut: (state, action) => {
       state.isUserLoggedout = action.payload;
     },
     toggleDarkMode: (state) => {
       state.darkMode = !state.darkMode;
     },
-    toggleErrorAndSuccesDialog: (state,action) => {
-      if (typeof action.payload === 'boolean') {
+    toggleErrorAndSuccesDialog: (state, action) => {
+      if (typeof action.payload === "boolean") {
         state.errorAndSuccesDialog = action.payload;
       } else {
         state.errorAndSuccesDialog = !state.errorAndSuccesDialog;
       }
     },
-    setErrorAndSuccesDialogMessage: (state,action) => {
-      state.errorAndSuccesDialogMessage = action.payload;
+
+    toggleBackdrop: (state) => {
+      state.showBackdrop = !state.showBackdrop;
     },
 
+    setErrorAndSuccesDialogMessage: (state, action) => {
+      state.errorAndSuccesDialogMessage = action.payload;
+    },
   },
 });
 
 export const globalReduxReducer = globalReduxSlice.reducer;
 
-export const {  setIsUserLogged,
+export const {
+  setIsUserLogged,
+  toggleBackdrop,
   setUserDetails,
   setUserLogout,
   setAuthChecked,
-  setJustLoggedOut, toggleDarkMode, toggleErrorAndSuccesDialog ,setErrorAndSuccesDialogMessage} =
-  globalReduxSlice.actions;
+  setJustLoggedOut,
+  toggleDarkMode,
+  toggleErrorAndSuccesDialog,
+  setErrorAndSuccesDialogMessage,
+} = globalReduxSlice.actions;
 
 export const globalReduxSelector = (state) => state.globalReduxReducer;

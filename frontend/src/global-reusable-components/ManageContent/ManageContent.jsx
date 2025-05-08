@@ -77,9 +77,10 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     selectedFilterType,
     finalSearchUsername,
     isSearchModeratorName,
+
   } = useSelector(manageContentSelector);
 
-  const { darkMode, userDetails } = useSelector(globalReduxSelector);
+  const { darkMode, userDetails,showBackdrop } = useSelector(globalReduxSelector);
   const theme = darkMode ? "dark" : "light";
   const colors = themeColors[theme];
 
@@ -528,7 +529,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
 
       {contentOpenDateDialog && <ManageContentFunctions />}
 
-      {isDeleting && <BackDropLoader />}
+      {(isDeleting || showBackdrop ) && <BackDropLoader />}
     </>
   );
 };

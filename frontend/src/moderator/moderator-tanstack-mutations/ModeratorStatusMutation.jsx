@@ -1,9 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateModeratorStatusApi } from "../moderator-apis/ModeratorStatusChangeApi";
 import { useDispatch } from "react-redux";
-import {
-  setErrorAndSuccesDialogMessage,
-} from "../../global-redux/GlobalRedux";
+import { setErrorAndSuccesDialogMessage, toggleBackdrop } from "../../global-redux/GlobalRedux";
 
 export const updateModeratorStatusMutation = () => {
   const queryClient = useQueryClient();
@@ -22,11 +20,14 @@ export const updateModeratorStatusMutation = () => {
         })
       );
 
-
-      dispatch({ type: 'globalredux/toggleErrorAndSuccesDialog', payload: true });
+      dispatch({
+        type: "globalredux/toggleErrorAndSuccesDialog",
+        payload: true,
+      });
     },
     onSettled: () => {
       queryClient.refetchQueries(["moderatormanagecontent"]);
+      dispatch(toggleBackdrop());
     },
   });
 };

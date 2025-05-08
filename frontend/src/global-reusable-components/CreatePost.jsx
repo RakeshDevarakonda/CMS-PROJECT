@@ -208,7 +208,6 @@ const CreatePost = () => {
 
       dispatch(toggleErrorAndSuccesDialog());
       dispatch(setResetPost());
-      queryClient.refetchQueries(["fetchcreatormanagecontent"]);
       dispatch(setVersionList({}));
       dispatch(setVersionposts({}));
       navigate(-1);

@@ -22,6 +22,7 @@ const initialState = {
   contentDeleteId: null,
   moderatorStatusFilter: "",
   isDeleting: false,
+  isStatusUpdating: false,
   moderatorPostStatusChange: {
     id: null,
     status: null,
@@ -183,6 +184,7 @@ export const {
   setModeratorPostStatusChange,
   setVersionposts,
   toggleDeleting,
+
   setModeratorStatusFilter,
   setFinalSearchterm,
   togglePostDetailsDialog,

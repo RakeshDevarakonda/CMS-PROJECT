@@ -19,7 +19,7 @@ export const useProfileDataUpdateMutation = () => {
     mutationFn: updateProfileDataApi,
     onSuccess: (data) => {
       dispatch(toggleEditing());
-      // queryClient.refetchQueries(["fetchcreatorprofileData"]);
+  
     },
     onError: (error) => {
       dispatch(toggleErrorAndSuccesDialog());

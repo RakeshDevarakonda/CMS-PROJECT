@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useDispatch } from "react-redux";
-import { setErrorAndSuccesDialogMessage } from "../../global-redux/GlobalRedux.jsx";
+import { setErrorAndSuccesDialogMessage, toggleBackdrop } from "../../global-redux/GlobalRedux.jsx";
 import { updateAdminStatusApi } from "../admin-apis/UpdateAdminStatusApi.jsx";
 import { setAdminPostStatusDetails } from "../../global-redux/ManageContentSlice.jsx";
 
@@ -47,6 +47,7 @@ export const updateAdminStatusMutation = () => {
     },
     onSettled: () => {
       queryClient.refetchQueries(["adminmanagecontent"]);
+      dispatch(toggleBackdrop())
     },
   });
 };
