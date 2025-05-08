@@ -35,8 +35,6 @@ export default function ManageContentTableBody({
 }) {
   const { darkMode } = useSelector(globalReduxSelector);
 
-
-
   const { versionList } = useSelector(manageContentSelector);
   const theme = darkMode ? "dark" : "light";
 
@@ -76,7 +74,7 @@ export default function ManageContentTableBody({
             }}
           >
             <Typography fontWeight="700" sx={{ color: colors.textPrimary }}>
-              {opportunity.title.slice(0,15)}...
+              {opportunity.title.slice(0, 15)}...
             </Typography>
             <Typography variant="body2" sx={{ color: colors.textSecondary }}>
               {opportunity.content

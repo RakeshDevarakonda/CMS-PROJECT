@@ -3,10 +3,14 @@ import { SignUpApi } from "../home-page-apis/SignUpApi";
 import { useDispatch } from "react-redux";
 import {
   setResetForm,
-
+  setSelectedRole,
+  setSignUpFormData,
   setSignUpSubmitting,
 } from "../home-page-redux/SignupSlice";
-import { setErrorAndSuccesDialogMessage, toggleErrorAndSuccesDialog } from "../../global-redux/GlobalRedux";
+import {
+  setErrorAndSuccesDialogMessage,
+  toggleErrorAndSuccesDialog,
+} from "../../global-redux/GlobalRedux";
 
 export const SignUpMutation = () => {
   const dispatch = useDispatch();
@@ -20,10 +24,13 @@ export const SignUpMutation = () => {
           message: "Signed Up Succesfully",
           type: "Success",
           buttonname: "Close",
-          signedup:true
+          signedup: true,
         })
       );
       dispatch(setSignUpSubmitting());
+
+      
+
     },
     onError: (error) => {
       dispatch(setSignUpSubmitting());
@@ -36,5 +43,9 @@ export const SignUpMutation = () => {
         })
       );
     },
+    onSettled:()=>{
+      dispatch(setResetForm());
+
+    }
   });
 };

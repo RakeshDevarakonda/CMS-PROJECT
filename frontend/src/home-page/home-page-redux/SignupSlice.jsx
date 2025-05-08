@@ -13,8 +13,10 @@ const initialState = {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "",
   },
   showPassword: false,
+  selectedRole: "Select Role",
   showConfirmPassword: false,
 
   isSignUpSubmitting: false,
@@ -27,7 +29,7 @@ const signUpFormDataSlice = createSlice({
     setSignUpFormData: (state, action) => {
       state.signUpFormData = { ...state.signUpFormData, ...action.payload };
     },
-   
+
     setSignUpFormDataErrors: (state, action) => {
       state.signUpFormDataErrors = {
         ...state.signUpFormDataErrors,
@@ -37,6 +39,8 @@ const signUpFormDataSlice = createSlice({
     setResetForm: (state) => {
       state.signUpFormData = initialState.signUpFormData;
       state.signUpFormDataErrors = initialState.signUpFormDataErrors;
+      state.selectedRole = initialState.selectedRole;
+
     },
     setShowPassword: (state) => {
       state.showPassword = !state.showPassword;
@@ -45,10 +49,12 @@ const signUpFormDataSlice = createSlice({
       state.showConfirmPassword = !state.showConfirmPassword;
     },
 
-
-
     setSignUpSubmitting: (state) => {
       state.isSignUpSubmitting = !state.isSignUpSubmitting;
+    },
+
+    setSelectedRole: (state, action) => {
+      state.selectedRole = action.payload;
     },
   },
 });
@@ -56,13 +62,13 @@ const signUpFormDataSlice = createSlice({
 export const signUpFormDataReducer = signUpFormDataSlice.reducer;
 
 export const {
+  setSelectedRole,
   setSignUpSubmitting,
   setShowPassword,
   setShowConfirmPassword,
   setSignUpFormData,
   setSignUpFormDataErrors,
   setResetForm,
-
 } = signUpFormDataSlice.actions;
 
 export const signUpFormDataSelector = (state) => state.signUpFormDataReducer;

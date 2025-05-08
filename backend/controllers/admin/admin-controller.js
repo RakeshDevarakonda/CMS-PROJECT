@@ -223,7 +223,6 @@ export const getAdminProfileData = async (req, res, next) => {
 export const changePostStatusByAdmin = async (req, res, next) => {
   try {
     const { postId, status, source, reason, version, isChecked } = req.body;
-    console.log(req.body);
 
     if (!postId || !status || !source) {
       throwError(400, "Post ID, Status, and Source are required.");
@@ -588,17 +587,17 @@ export const getAdminStats = async (req, res, next) => {
       }
     });
 
+    console.log(lastFiveDaysStats)
+
     res.status(200).json({
       dataCount: statusSummary,
       lastFiveDaysStats,
       success: true,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
-
 
 export const getAllVersionsByAdmin = async (req, res, next) => {
   const { id, version, source } = req.query;
@@ -716,7 +715,7 @@ export const createPostByAdmin = async (req, res, next) => {
 
       if (photos.length > 0) {
         const result = await uploadToCloudinary(photos);
-        console.log(result);
+
         if (result.success && result.urls.length > 0) {
           newPost.thumbnailImage = result.urls[0];
         } else {

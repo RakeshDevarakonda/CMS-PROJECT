@@ -2,16 +2,18 @@ import AdminAnalytics from "../models/admin-analytics.js";
 import { throwError } from "./throw-error.js";
 
 export const updateAdminAnalytics = async (prev, actionType) => {
+
+  console.log(actionType,"actionType")
   try {
     let analytics = await AdminAnalytics.findOne();
 
     switch (actionType) {
       case "creator":
-        analytics.totalCreators += 1;
+        analytics.creator += 1;
         break;
 
       case "moderator":
-        analytics.totalModerators += 1;
+        analytics.moderator += 1;
         break;
 
       case "addposts":

@@ -8,7 +8,9 @@ import { updateAdminAnalytics } from "../../utils/admin-analytics.js";
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
 export const signupController = async (req, res, next) => {
-  let { username, email, password, confirmPassword } = req.body;
+  let { username, email, password, role, confirmPassword } = req.body;
+
+  console.log(req.body);
 
   username = username?.trim();
   email = email?.trim();
@@ -16,7 +18,7 @@ export const signupController = async (req, res, next) => {
   confirmPassword = confirmPassword?.trim();
 
   // Field validations
-  if (!username || !email || !password || !confirmPassword) {
+  if (!username || !email || !password || !confirmPassword || !role) {
     return throwError(400, "All fields are required");
   }
 
@@ -42,9 +44,7 @@ export const signupController = async (req, res, next) => {
   try {
     const existingUser = await User.find({ email });
 
-    console.log(existingUser)
-
-    if (existingUser.length>0) {
+    if (existingUser.length > 0) {
       return throwError(409, "Email already in use");
     }
 
@@ -56,15 +56,16 @@ export const signupController = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const role="creator"
-    await updateAdminAnalytics(null,null,"creator")
+    if (role !== "admin") {
+      await updateAdminAnalytics(null, role);
+    }
 
     const newUser = new User({
       name: username,
       email,
       password: hashedPassword,
       isActive: true,
-      role
+      role,
     });
 
     await newUser.save();
@@ -87,9 +88,6 @@ export const signinController = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ email });
-
-  
-
 
     if (!user) {
       return throwError(404, "Email not registered");
@@ -118,7 +116,7 @@ export const signinController = async (req, res, next) => {
       path: "/",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
-    
+
     return res.status(200).json({
       message: "Sign-in successful",
       payload: {
@@ -157,7 +155,7 @@ export const checkUserLoginController = async (req, res, next) => {
         email: user.email,
         username: user.name,
         role: user.role,
-        isActive:user.isActive
+        isActive: user.isActive,
       },
     });
   } catch (err) {

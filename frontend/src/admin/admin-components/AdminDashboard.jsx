@@ -93,7 +93,7 @@ const AdminDashboard = () => {
 
   const { dataCount } = useSelector(adminDashboardSelector);
 
-  console.log(dataCount);
+ 
 
   const muiTheme = useMuiTheme();
   const isXs = useMediaQuery(muiTheme.breakpoints.down("sm"));
@@ -132,7 +132,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (isSuccess && statsData) {
-      console.log(statsData?.dataCount);
+ 
       dispatch(setDataCount(statsData?.dataCount));
     }
 

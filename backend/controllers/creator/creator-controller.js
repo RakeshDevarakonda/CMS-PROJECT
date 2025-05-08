@@ -63,7 +63,7 @@ export const createPostController = async (req, res, next) => {
       );
     }
 
-    console.log(tags);
+ 
 
     const newPost = new Post({
       content: content.trim(),
@@ -319,7 +319,7 @@ export const getCreatorStatsController = async (req, res, next) => {
       }
     });
 
-    // console.log(statusSummary, posts, lastFiveDaysStats);
+ 
 
     res.status(200).json({
       dataCount: statusSummary,
@@ -472,7 +472,7 @@ export const updateProfileDataController = async (req, res, next) => {
         uploadedImageUrls.length > 0 ? "success" : "failed or not uploaded",
     });
   } catch (error) {
-    console.log(error);
+ 
     next(error);
   }
 };

@@ -33,7 +33,6 @@ import {
   setContentTotalData,
   setModeratorPostStatusChange,
   toggleDeleting,
-
 } from "../global-redux/ManageContentSlice.jsx";
 import { deleteSinglePostMutation } from "../creator/creator-tanstack-mutations/DeleteSinglePostMutation.jsx";
 import { updateModeratorStatusMutation } from "../moderator/moderator-tanstack-mutations/ModeratorStatusMutation.jsx";
@@ -114,6 +113,10 @@ const ErrorAndSuccesDialog = () => {
   const handleClose = () => {
     dispatch(toggleErrorAndSuccesDialog());
     dispatch(setErrorAndSuccesDialogMessage(""));
+
+    if (dialogeMessage?.signedup) {
+      navigate("/signin");
+    }
   };
   let reasonfor;
   const handleButtonClick = () => {
@@ -136,13 +139,9 @@ const ErrorAndSuccesDialog = () => {
       dispatch(toggleDeleting());
     }
 
-    if (dialogeMessage?.signedup) {
-      navigate("/signin", { replace: true });
-    }
-
     if (dialogeMessage?.buttonname == "Change Status") {
       updateAdminStatus({ ...adminPostStatusDetails, isChecked: true });
-      dispatch(toggleBackdrop())
+      dispatch(toggleBackdrop());
     }
 
     if (dialogeMessage?.buttonname == "Update Status") {
@@ -152,7 +151,7 @@ const ErrorAndSuccesDialog = () => {
         reasonfor = rejectionReason;
       }
       if (userDetails?.role == "moderator") {
-        dispatch(toggleBackdrop())
+        dispatch(toggleBackdrop());
         updateModeratorStatus({
           postId: statusChangeDetails.id,
           status: statusChangeDetails.status,
@@ -174,7 +173,7 @@ const ErrorAndSuccesDialog = () => {
 
         updateAdminStatus(dataToSend);
 
-        dispatch(toggleBackdrop())
+        dispatch(toggleBackdrop());
 
         dispatch(setAdminPostStatusDetails(dataToSend));
 

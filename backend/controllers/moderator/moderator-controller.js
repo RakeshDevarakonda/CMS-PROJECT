@@ -63,7 +63,6 @@ export const getModeratorStatsController = async (req, res, next) => {
 
     const statuses = ["approved", "rejected"];
     const lastFiveDaysStats = {};
-    console.log("object");
 
     for (let i = 0; i < 5; i++) {
       const date = new Date();

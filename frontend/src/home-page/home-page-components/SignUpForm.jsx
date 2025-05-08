@@ -12,6 +12,12 @@ import {
   Grid,
   useMediaQuery,
   CircularProgress,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Badge,
+  FormHelperText,
 } from "@mui/material";
 import {
   Visibility,
@@ -19,10 +25,15 @@ import {
   Email,
   Lock,
   Person,
+  KeyboardArrowDown,
+  Create,
+  Security,
+  AdminPanelSettings,
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setSelectedRole,
   setShowConfirmPassword,
   setShowPassword,
   setSignUpFormData,
@@ -60,11 +71,12 @@ const SignUpForm = () => {
     signUpFormDataErrors,
     showPassword,
     showConfirmPassword,
-
+    selectedRole,
     isSignUpSubmitting,
   } = useSelector(signUpFormDataSelector);
 
   const handleChange = (e) => {
+    console.log(e.target.name)
     const { name, value } = e.target;
     dispatch(setSignUpFormData({ [name]: value }));
 
@@ -80,6 +92,7 @@ const SignUpForm = () => {
       email: "",
       password: "",
       confirmPassword: "",
+      role: "",
     };
 
     if (!signUpFormData.username.trim()) {
@@ -111,6 +124,11 @@ const SignUpForm = () => {
       isValid = false;
     }
 
+    if (!["creator", "admin", "moderator"].includes(selectedRole)) {
+      newErrors.role = "Please select a role";
+      isValid = false;
+    }
+
     dispatch(setSignUpFormDataErrors(newErrors));
     return isValid;
   };
@@ -118,9 +136,15 @@ const SignUpForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      dispatch(setSignUpSubmitting());
+
+      const update = { role: selectedRole };
+
+      console.log(signUpFormData)
+
+      const updatedData = { ...signUpFormData, ...update };
+      signUpMutation.mutate(updatedData);
     }
-    dispatch(setSignUpSubmitting());
-    signUpMutation.mutate(signUpFormData);
   };
 
   const togglePasswordVisibility = () => {
@@ -213,7 +237,7 @@ const SignUpForm = () => {
               value={signUpFormData.username}
               onChange={handleChange}
               error={!!signUpFormDataErrors.name}
-              helperText={signUpFormDataErrors.name}
+              helpertext={signUpFormDataErrors.name}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -229,22 +253,6 @@ const SignUpForm = () => {
                 style: { color: currentColors.textSecondary },
               }}
             />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
 
             <TextField
               sx={{
@@ -274,7 +282,7 @@ const SignUpForm = () => {
               value={signUpFormData.email}
               onChange={handleChange}
               error={!!signUpFormDataErrors.email}
-              helperText={signUpFormDataErrors.email}
+              helpertext={signUpFormDataErrors.email}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -320,7 +328,7 @@ const SignUpForm = () => {
               value={signUpFormData.password}
               onChange={handleChange}
               error={!!signUpFormDataErrors.password}
-              helperText={signUpFormDataErrors.password}
+              helpertext={signUpFormDataErrors.password}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -385,7 +393,7 @@ const SignUpForm = () => {
               value={signUpFormData.confirmPassword}
               onChange={handleChange}
               error={!!signUpFormDataErrors.confirmPassword}
-              helperText={signUpFormDataErrors.confirmPassword}
+              helpertext={signUpFormDataErrors.confirmPassword}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -420,6 +428,204 @@ const SignUpForm = () => {
                 style: { color: currentColors.textSecondary },
               }}
             />
+
+            <Box>
+              <FormControl
+                size="medium"
+                fullWidth
+                error={!!signUpFormDataErrors.role}
+                helpertext={signUpFormDataErrors.role}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    bgcolor: currentColors.background,
+                    borderColor: currentColors.primaryLight,
+                    boxShadow: "0 4px 12px rgba(58, 86, 196, 0.12)",
+                    transition: "all 0.3s ease",
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: currentColors.primary,
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: currentColors.primary,
+                      borderWidth: "2px",
+                    },
+                  },
+                  "& .MuiInputBase-input": {
+                    color: currentColors.text,
+                    fontWeight: 500,
+                  },
+                }}
+              >
+                <InputLabel
+                  id="demo-simple-select-label"
+                  sx={{
+                    color: darkMode ? "white" : "black",
+                    fontWeight: 500,
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Badge
+                      sx={{ fontSize: "1.1rem", color: currentColors.primary }}
+                    />
+                    Role Type
+                  </Box>
+                </InputLabel>
+                <Select
+                  value={selectedRole}
+                  onChange={(e) => {
+                    dispatch(setSelectedRole(e.target.value));
+                  }}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  displayEmpty
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        bgcolor: currentColors.background,
+                        color: currentColors.text,
+                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.12)",
+                        borderRadius: "8px",
+                        "&::-webkit-scrollbar": { width: "6px" },
+                        "&::-webkit-scrollbar-thumb": {
+                          background: darkMode
+                            ? currentColors.primaryLight
+                            : "#d0d9ff",
+                          borderRadius: "10px",
+                          "&:hover": {
+                            background: darkMode
+                              ? currentColors.primary
+                              : "#b5c4ff",
+                          },
+                        },
+                        "& .MuiMenuItem-root": {
+                          color: currentColors.text,
+                          padding: "10px 16px",
+                          "&:hover": {
+                            backgroundColor: darkMode
+                              ? "rgba(58, 86, 196, 0.12)"
+                              : "rgba(58, 86, 196, 0.08)",
+                          },
+                          "&.Mui-selected": {
+                            backgroundColor: darkMode
+                              ? "rgba(58, 86, 196, 0.25)"
+                              : "rgba(58, 86, 196, 0.12)",
+                            "&:hover": {
+                              backgroundColor: darkMode
+                                ? "rgba(58, 86, 196, 0.35)"
+                                : "rgba(58, 86, 196, 0.2)",
+                            },
+                          },
+                        },
+                      },
+                    },
+                  }}
+                  IconComponent={(props) => (
+                    <KeyboardArrowDown
+                      {...props}
+                      sx={{
+                        color: `${currentColors.text} !important`, // Force the color to apply
+                        transition: "transform 0.3s ease",
+                        ".MuiOutlinedInput-root.Mui-focused &": {
+                          transform: "rotate(180deg)",
+                        },
+                      }}
+                    />
+                  )}
+                >
+                  <MenuItem value="Select Role" disabled>
+                    <em>Select Role</em>
+                  </MenuItem>
+
+                  <MenuItem value="creator">
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "50%",
+                          background: `linear-gradient(135deg, ${currentColors.primary} 0%, #6384ff 100%)`,
+                          color: "white",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "0.9rem",
+                          fontWeight: "bold",
+                          boxShadow: "0 2px 6px rgba(58, 86, 196, 0.3)",
+                        }}
+                      >
+                        <Create fontSize="small" />
+                      </Box>
+                      <span>Creator</span>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value="moderator">
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "50%",
+                          background: `linear-gradient(135deg, ${currentColors.primary} 0%, #6384ff 100%)`,
+                          color: "white",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "0.9rem",
+                          fontWeight: "bold",
+                          boxShadow: "0 2px 6px rgba(58, 86, 196, 0.3)",
+                        }}
+                      >
+                        <Security fontSize="small" />
+                      </Box>
+                      <span>Moderator</span>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value="admin">
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "50%",
+                          background: `linear-gradient(135deg, ${currentColors.primary} 0%, #6384ff 100%)`,
+                          color: "white",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "0.9rem",
+                          fontWeight: "bold",
+                          boxShadow: "0 2px 6px rgba(58, 86, 196, 0.3)",
+                        }}
+                      >
+                        <AdminPanelSettings fontSize="small" />
+                      </Box>
+                      <span>Admin</span>
+                    </Box>
+                  </MenuItem>
+                </Select>
+
+                {signUpFormDataErrors.role && (
+                  <FormHelperText>please Select Role</FormHelperText>
+                )}
+              </FormControl>
+            </Box>
 
             <Button
               type="submit"
