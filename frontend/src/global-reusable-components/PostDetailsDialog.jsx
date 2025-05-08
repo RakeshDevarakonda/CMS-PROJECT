@@ -58,11 +58,8 @@ const PostDetailsDialog = () => {
   const isDialogOpen = isManageDialogOpen;
   const opportunity = selectedOpportunity;
 
-  const SanitizeHtml = DOMPurify.sanitize(opportunity.content);
+  const sanitizeHtml = DOMPurify.sanitize(opportunity.content);
 
-  const cleanHtml =
-    new DOMParser().parseFromString(SanitizeHtml, "text/html").body
-      .textContent || "";
   const [imageLoaded, setImageLoaded] = useState(false);
 
   // Theme colors
@@ -271,18 +268,17 @@ const PostDetailsDialog = () => {
                   Description
                 </Typography>
 
-                <Typography
-                  variant="body1"
-                  paragraph
-                  component="div"
+                <Box
+                  className="article-content"
                   sx={{
-                    color: colors.textSecondary,
-                    lineHeight: 1.6,
-                    whiteSpace: "pre-line",
+                    color: colors.textPrimary,
+                    lineHeight: "1.7",
+                    fontFamily: "'Segoe UI', sans-serif",
+                    fontSize: "16px",
+                    padding: "20px",
                   }}
-                >
-                  {cleanHtml}
-                </Typography>
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml }} // Render HTML content
+                />
               </CardContent>
             </Card>
           </Grid>

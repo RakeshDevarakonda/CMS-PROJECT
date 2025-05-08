@@ -110,11 +110,8 @@ const ArticlePage = () => {
       setArticle(data?.post);
       setRecentArticles(data?.relatedArticles);
       const sanitizedContent = DOMPurify.sanitize(data?.post?.content || "");
-      const plainText =
-        new DOMParser().parseFromString(sanitizedContent, "text/html").body
-          .textContent || "";
 
-      setarticleSanitizedContent(plainText);
+      setarticleSanitizedContent(sanitizedContent);
     }
 
     if (getCommentsSuccess && getCommentsData) {
@@ -407,23 +404,17 @@ const ArticlePage = () => {
           border: `1px solid ${themeColors.divider}`,
         }}
       >
-        <Typography
-          variant="body1"
-          component="div"
+        <Box
+          className="article-content"
           sx={{
             color: themeColors.text,
-            lineHeight: 1.7,
-            "& p": { mb: 2 },
-            "& h2": {
-              color: themeColors.text,
-              mt: 4,
-              mb: 2,
-              fontWeight: 600,
-            },
+            lineHeight: "1.7",
+            fontFamily: "'Segoe UI', sans-serif",
+            fontSize: "16px",
+            padding: "20px",
           }}
-        >
-          {articleSanitizedContent}
-        </Typography>
+          dangerouslySetInnerHTML={{ __html: articleSanitizedContent }} // Render HTML content
+        />
 
         <Divider sx={{ my: 3, borderColor: themeColors.divider }} />
 
