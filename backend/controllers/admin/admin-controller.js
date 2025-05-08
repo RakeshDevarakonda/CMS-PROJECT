@@ -290,6 +290,9 @@ export const changePostStatusByAdmin = async (req, res, next) => {
 
     await post.save();
 
+
+    await post.populate("moderatedBy.user", "name email role");
+
     res.status(200).json({
       message: "Post status updated successfully.",
       post,

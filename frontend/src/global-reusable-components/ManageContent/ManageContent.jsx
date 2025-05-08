@@ -54,7 +54,6 @@ const ManageContent = ({ statusfilter, userDataType }) => {
   const { themeColors, sortedData, displayedOpportunities, getStatusStyle } =
     useManageContentFunctions();
 
-  console.log(displayedOpportunities)
 
   const dispatch = useDispatch();
   const [refreshKey, setRefreshKey] = useState(Date.now());
@@ -252,7 +251,6 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     }
   }, [usersDataForAdmin, usersDataSuccesForAdmin]);
 
-  console.log(backendDataintable);
 
   useEffect(() => {
     if (isSuccess && backendDataintable) {
@@ -497,7 +495,6 @@ const ManageContent = ({ statusfilter, userDataType }) => {
                   ) : displayedOpportunities.length > 0 ? (
                     displayedOpportunities.map((opportunity, index) => {
                       const statusStyle = getStatusStyle(opportunity?.status);
-                      console.log(opportunity.status,statusStyle)
                       return (
                         <ManageContentTableBody
                           key={index}

@@ -23,7 +23,8 @@ import {
   setFinalSearchterm,
   setContentSearchUsername,
   setFinalSearchUsername,
-  toggleIsSearchModeratorName, // You forgot to import this
+  toggleIsSearchModeratorName,
+  setModeratoratedByData, // You forgot to import this
 } from "../../global-redux/ManageContentSlice";
 
 import {
@@ -202,6 +203,8 @@ export default function useManageContentFunctions() {
     );
     dispatch(setModeratorPostStatusChange({ id, status, source, version }));
     dispatch(toggleErrorAndSuccesDialog());
+
+   
   };
 
   const handleAdminStatusChange = (id, status, source, version) => {

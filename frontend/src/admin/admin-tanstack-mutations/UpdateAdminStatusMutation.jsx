@@ -1,18 +1,41 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { useDispatch } from "react-redux";
-import { setErrorAndSuccesDialogMessage, toggleBackdrop } from "../../global-redux/GlobalRedux.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setErrorAndSuccesDialogMessage,
+  toggleBackdrop,
+} from "../../global-redux/GlobalRedux.jsx";
 import { updateAdminStatusApi } from "../admin-apis/UpdateAdminStatusApi.jsx";
-import { setAdminPostStatusDetails } from "../../global-redux/ManageContentSlice.jsx";
+import { manageContentSelector, setAdminPostStatusDetails, setContentTotalData } from "../../global-redux/ManageContentSlice.jsx";
 
 export const updateAdminStatusMutation = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
+  const {contentTotalData}=useSelector(manageContentSelector)
+
   return useMutation({
     mutationKey: ["updateadminstatusmutaion"],
     mutationFn: updateAdminStatusApi,
     onSuccess: (data) => {
+      const updatedPost = data?.post;
+      const totalData = [...contentTotalData];
+
+      console.log(totalData, updatedPost);
+
+      if (updatedPost?._id) {
+        const updatedIndex = totalData.findIndex(
+          (e) => e._id === updatedPost._id
+        );
+
+        console.log(updatedIndex);
+
+        if (updatedIndex !== -1) {
+          totalData[updatedIndex] = updatedPost;
+          dispatch(setContentTotalData(totalData));
+        }
+      }
+
       dispatch(setAdminPostStatusDetails({}));
     },
     onError: (error) => {
@@ -46,8 +69,8 @@ export const updateAdminStatusMutation = () => {
       }
     },
     onSettled: () => {
-      queryClient.refetchQueries(["adminmanagecontent"]);
-      dispatch(toggleBackdrop())
+      // queryClient.refetchQueries(["adminmanagecontent"]);
+      dispatch(toggleBackdrop());
     },
   });
 };

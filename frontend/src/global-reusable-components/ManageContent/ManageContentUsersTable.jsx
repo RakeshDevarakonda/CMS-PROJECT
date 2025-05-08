@@ -67,7 +67,6 @@ const IOSSwitch = styled((props) => (
 }));
 
 export default function ManageContentUsersTable({ usersData, userDataType }) {
-  console.log(usersData);
   const getColor = (isActive) => {
     if (isActive) {
       return {

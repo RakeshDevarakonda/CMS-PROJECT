@@ -49,6 +49,20 @@ const initialState = {
   finalSearchUsername: "",
   isSearchModeratorName: "false",
   adminPostStatusDetails: {},
+
+  moderatoratedByData: {
+    _id:null,
+    user: {
+      _id: null,
+      name: null,
+      role: null,
+    },
+    updatedAt: "",
+    reason: null,
+    action: null,
+    role: null,
+
+  },
 };
 
 const manageContentSlice = createSlice({
@@ -167,12 +181,17 @@ const manageContentSlice = createSlice({
     setAdminPostStatusDetails: (state, action) => {
       state.adminPostStatusDetails = action.payload;
     },
+
+    setModeratoratedByData: (state, action) => {
+      state.moderatoratedByData = {...state.moderatoratedByData,...action.payload};
+    },
   },
 });
 
 export const manageContentReducer = manageContentSlice.reducer;
 
 export const {
+  setModeratoratedByData,
   setAdminPostStatusDetails,
   toggleIsSearchModeratorName,
   setFinalSearchUsername,

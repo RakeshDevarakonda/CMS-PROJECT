@@ -62,7 +62,7 @@ export const getModeratorStatsController = async (req, res, next) => {
 
     const statuses = ["approved", "rejected"];
     const lastFiveDaysStats = {};
-    console.log("object")
+    console.log("object");
 
     for (let i = 0; i < 5; i++) {
       const date = new Date();
@@ -114,8 +114,10 @@ export const getallmoderatorposts = async (req, res, next) => {
     const skip = page * limit;
     const statusFilter = contentStatusFilter?.toLowerCase();
 
-    let postQuery = { status: { $nin: ["draft","deleted"] } };
-    let postHistoryQuery = { status: { $nin: ["draft", "pending","deleted"] } };
+    let postQuery = { status: { $nin: ["draft", "deleted"] } };
+    let postHistoryQuery = {
+      status: { $nin: ["draft", "pending", "deleted"] },
+    };
 
     if (statusFilter === "pending") {
       postQuery.status = statusFilter;
@@ -289,6 +291,8 @@ export const changePostStatus = async (req, res, next) => {
     post.reason = reason && reason.trim().length > 0 ? reason : null;
 
     await post.save();
+
+    await post.populate("moderatedBy.user", "name email role");
 
     res.status(200).json({
       message: "Post status updated successfully.",
