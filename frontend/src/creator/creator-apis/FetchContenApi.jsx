@@ -23,6 +23,7 @@ export const fetchContentApi = async (params) => {
     console.log(response.data);
     return response.data;
   } catch (error) {
+    console.log(error);
     let errorMessage;
 
     if (error.response?.status === 500) {

@@ -12,6 +12,7 @@ export const fetchAdminProfileApi = async () => {
     );
     return response.data;
   } catch (error) {
+    console.log(error);
     console.error("Error fetching profile data:", error);
     throw new Error("Failed to fetch profile data");
   }

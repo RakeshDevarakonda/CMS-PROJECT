@@ -175,6 +175,7 @@ export const getAllAdminPosts = async (req, res, next) => {
       posts,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -201,6 +202,7 @@ export const getAllUsers = async (req, res, next) => {
 
     res.status(200).json({ getUsers, statusSummary });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -217,6 +219,7 @@ export const getAdminProfileData = async (req, res, next) => {
 
     res.status(200).json(user);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -299,6 +302,7 @@ export const changePostStatusByAdmin = async (req, res, next) => {
       post,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -333,6 +337,7 @@ export const changeUserActive = async (req, res, next) => {
       role: user?.role,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -459,6 +464,7 @@ export const updateAdminProfile = async (req, res, next) => {
         uploadedImageUrls.length > 0 ? "success" : "failed or not uploaded",
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -512,6 +518,7 @@ export const getSinglePostByAdmin = async (req, res, next) => {
       data: post,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -587,7 +594,7 @@ export const getAdminStats = async (req, res, next) => {
       }
     });
 
-    console.log(lastFiveDaysStats)
+    console.log(lastFiveDaysStats);
 
     res.status(200).json({
       dataCount: statusSummary,
@@ -595,6 +602,7 @@ export const getAdminStats = async (req, res, next) => {
       success: true,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -641,6 +649,7 @@ export const getAllVersionsByAdmin = async (req, res, next) => {
       data: finalPost,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -744,6 +753,7 @@ export const createPostByAdmin = async (req, res, next) => {
       data: savedPost,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -890,6 +900,7 @@ export const updateSinglePostByAdmin = async (req, res, next) => {
       data: updated,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -932,6 +943,7 @@ export const deleteSinglePostByAdmin = async (req, res, next) => {
 
     res.status(200).json({ message: "Post status changed to deleted" });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

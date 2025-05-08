@@ -2,8 +2,7 @@ import AdminAnalytics from "../models/admin-analytics.js";
 import { throwError } from "./throw-error.js";
 
 export const updateAdminAnalytics = async (prev, actionType) => {
-
-  console.log(actionType,"actionType")
+  console.log(actionType, "actionType");
   try {
     let analytics = await AdminAnalytics.findOne();
 
@@ -58,6 +57,7 @@ export const updateAdminAnalytics = async (prev, actionType) => {
 
     await analytics.save();
   } catch (error) {
+    console.log(error);
     throwError(500, "Error updating admin analytics: " + error.message);
   }
 };

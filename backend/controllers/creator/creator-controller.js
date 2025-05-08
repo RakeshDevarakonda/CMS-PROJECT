@@ -63,8 +63,6 @@ export const createPostController = async (req, res, next) => {
       );
     }
 
- 
-
     const newPost = new Post({
       content: content.trim(),
       title: title.trim(),
@@ -119,6 +117,7 @@ export const createPostController = async (req, res, next) => {
       data: savedPost,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -224,6 +223,7 @@ export const getAllPostsController = async (req, res, next) => {
       posts: paginatedPosts,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -319,14 +319,13 @@ export const getCreatorStatsController = async (req, res, next) => {
       }
     });
 
- 
-
     res.status(200).json({
       dataCount: statusSummary,
       latestPosts: posts,
       lastFiveDaysStats,
     });
   } catch (error) {
+    console.log(error);
     console.error("Error fetching creator stats:", error);
     next(error);
   }
@@ -344,6 +343,7 @@ export const getProfileDataController = async (req, res, next) => {
 
     res.status(200).json(user);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -472,7 +472,8 @@ export const updateProfileDataController = async (req, res, next) => {
         uploadedImageUrls.length > 0 ? "success" : "failed or not uploaded",
     });
   } catch (error) {
- 
+    console.log(error);
+
     next(error);
   }
 };
@@ -519,6 +520,7 @@ export const getSinglePostController = async (req, res, next) => {
       data: post,
     });
   } catch (error) {
+    console.log(error);
     next(error); // Pass the error to the global error handler
   }
 };
@@ -563,6 +565,7 @@ export const deletePost = async (req, res, next) => {
 
     res.status(200).json({ message: "Post status changed to deleted" });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -717,6 +720,7 @@ export const updatePostController = async (req, res, next) => {
       data: updated,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -756,6 +760,7 @@ export const getPostByVersions = async (req, res, next) => {
       data: finalPost,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

@@ -72,6 +72,7 @@ export const signupController = async (req, res, next) => {
 
     return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
+    console.log(error);
     console.error("Signup error:", error);
     return next(error); // Forward to error handling middleware
   }
@@ -127,6 +128,7 @@ export const signinController = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.log(error);
     console.error("Sign-in error:", error);
     return next(error); // Forward to error handling middleware
   }

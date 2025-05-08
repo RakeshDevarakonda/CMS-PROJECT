@@ -14,6 +14,7 @@ export const fetchversionContentApi = async ({ id, source, version }) => {
 
     return response.data.data;
   } catch (error) {
+    console.log(error);
     console.error("Error fetching version data:", error);
     throw new Error("Failed to fetch version data");
   }

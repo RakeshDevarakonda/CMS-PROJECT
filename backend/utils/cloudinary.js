@@ -8,7 +8,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-
 export const uploadToCloudinary = async (photos, folder = "CMS PROJECT") => {
   let fileUrls;
   try {
@@ -20,9 +19,10 @@ export const uploadToCloudinary = async (photos, folder = "CMS PROJECT") => {
       photos.map((filePath) => cloudinary.uploader.upload(filePath, { folder }))
     );
 
-     fileUrls = cloudinaryResponses.map((res) => res.secure_url);
+    fileUrls = cloudinaryResponses.map((res) => res.secure_url);
     return { success: true, urls: fileUrls };
   } catch (error) {
+    console.log(error);
     for (const url of fileUrls) {
       const publicId = extractPublicId(url);
       await cloudinary.uploader.destroy(publicId);

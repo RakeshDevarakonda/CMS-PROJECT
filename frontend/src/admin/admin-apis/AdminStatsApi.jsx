@@ -9,6 +9,7 @@ export const adminStatsApi = async () => {
 
     return response.data;
   } catch (error) {
+    console.log(error);
     let errorMessage;
     if (error.response?.status === 500) {
       errorMessage = "Something went wrong please try again";

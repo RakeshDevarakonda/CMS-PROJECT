@@ -49,6 +49,7 @@ homePageRouter.get("/getallarticles", async (req, res, next) => {
       totalCount,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
@@ -78,6 +79,7 @@ homePageRouter.get("/getsinglepost/:id", async (req, res, next) => {
 
     res.json({ post, relatedArticles });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
@@ -96,6 +98,7 @@ homePageRouter.post("/singlepost/:id/like", async (req, res, next) => {
 
     res.json({ message: "Post liked", totalLikes: post.likes });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
@@ -114,6 +117,7 @@ homePageRouter.post("/singlepost/:id/dislike", async (req, res, next) => {
 
     res.json({ message: "Post disliked", totalDislikes: post.dislikes });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
@@ -144,6 +148,7 @@ homePageRouter.post("/addcomment", async (req, res, next) => {
       comment: newComment,
     });
   } catch (error) {
+    console.log(error);
     console.error(error);
 
     next(error);
@@ -177,6 +182,7 @@ homePageRouter.post("/addveiwcount", async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.log(error);
     console.error(error);
 
     next(error);
@@ -213,6 +219,7 @@ homePageRouter.post("/comment", async (req, res, next) => {
       comment: newComment,
     });
   } catch (err) {
+    console.log(err)
     next(err);
   }
 });

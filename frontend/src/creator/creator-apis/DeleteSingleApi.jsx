@@ -12,6 +12,7 @@ export const deleteSingleApi = async ({ id, version }) => {
     );
     return response.data;
   } catch (error) {
+    console.log(error);
     let errorMessage;
 
     if (error.response?.status === 500) {

@@ -85,6 +85,7 @@ app.post("/api/addurls", upload.array("file"), async (req, res, next) => {
       return res.status(400).json({ message: "No files provided" });
     }
   } catch (error) {
+    console.log(error);
     for (const url of uploadedImageUrls) {
       const publicId = extractPublicId(url);
       await cloudinary.uploader.destroy(publicId);

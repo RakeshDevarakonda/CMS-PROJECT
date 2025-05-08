@@ -20,6 +20,7 @@ export const getAdminPostEditById = async ({ editid, version }) => {
 
     throw new Error("Invalid response format");
   } catch (error) {
+    console.log(error);
     let errorMessage;
 
     if (error.response?.status === 500) {

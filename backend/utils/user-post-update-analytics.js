@@ -10,7 +10,6 @@ export const updateUserAnalytics = async (
   try {
     let userAnalytics = await UserAnalytics.findOne({ userId });
 
-
     switch (actionType) {
       case "create":
         userAnalytics.totalPosts += 1;
@@ -65,6 +64,7 @@ export const updateUserAnalytics = async (
 
     await userAnalytics.save();
   } catch (error) {
+    console.log(error);
     throwError(505, "Error updating user analytics: " + error.message);
   }
 };

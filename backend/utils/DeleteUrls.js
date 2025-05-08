@@ -42,6 +42,7 @@ export const deleteUrl = async (urls) => {
         result: result.result,
       });
     } catch (err) {
+      console.log(err)
       results.push({ url, status: "error", error: err.message });
     }
   }

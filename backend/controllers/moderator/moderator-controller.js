@@ -86,6 +86,7 @@ export const getModeratorStatsController = async (req, res, next) => {
       lastFiveDaysStats,
     });
   } catch (error) {
+    console.log(error);
     console.error("Error fetching creator stats:", error);
     next(error);
   }
@@ -186,6 +187,7 @@ export const getallmoderatorposts = async (req, res, next) => {
       statusSummary,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -301,6 +303,7 @@ export const changePostStatus = async (req, res, next) => {
       post,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -317,6 +320,7 @@ export const getModeratorProfileDataController = async (req, res, next) => {
 
     res.status(200).json(user);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -444,6 +448,7 @@ export const updateModeratorProfileDataController = async (req, res, next) => {
         uploadedImageUrls.length > 0 ? "success" : "failed or not uploaded",
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

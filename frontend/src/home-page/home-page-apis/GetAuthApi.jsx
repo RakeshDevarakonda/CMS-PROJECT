@@ -8,6 +8,7 @@ export const GetAuthApi = async () => {
     });
     return response?.data?.payload;
   } catch (error) {
+    console.log(error);
     let errorMessage;
 
     if (error.response?.status === 500) {

@@ -27,11 +27,9 @@ export const updateModeratorAnalytics = async (
           if (newStatus === "approved") {
             analytics.approvedCount += 1;
             analytics.rejectedCount -= 1;
-
           } else if (newStatus === "rejected") {
             analytics.rejectedCount += 1;
             analytics.approvedCount -= 1;
-
           }
         } else {
           if (newStatus === "approved") {
@@ -62,6 +60,7 @@ export const updateModeratorAnalytics = async (
 
     await analytics.save();
   } catch (error) {
+    console.log(error);
     throwError(500, "Error updating moderator analytics: " + error.message);
   }
 };
