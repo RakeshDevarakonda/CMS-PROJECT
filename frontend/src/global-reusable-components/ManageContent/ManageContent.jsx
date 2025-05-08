@@ -149,6 +149,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     refetch: createrrefresh,
     isError: isCreatorGetError,
     error: errorForCreatorGetContent,
+    isFetching:creatorIsFetching
   } = useGetManageContentQuery(params, isCreator, manageuser);
 
   const {
@@ -158,6 +159,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     refetch: moderatorrefresh,
     isError: isModeratorGetError,
     error: errorForModeratorGetContent,
+    isFetching:moderatorIsFetching
   } = useGetModeratorManageContentQuery(params, isModerator, manageuser);
 
   const {
@@ -167,7 +169,11 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     refetch: adminrefresh,
     isError: isAdminGetError,
     error: errorForAdminGetContent,
+    isFetching:adminIsFetching
   } = useGetAdminContentQuery(params, isAdmin, manageuser);
+
+  const isFetching =adminIsFetching || moderatorIsFetching || creatorIsFetching
+  const isPostsLoading =adminLoading || moderatorLoading || creatorLoading
 
   const isGetContentError =
     isCreatorGetError || isModeratorGetError || isAdminGetError;
@@ -529,7 +535,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
 
       {contentOpenDateDialog && <ManageContentFunctions />}
 
-      {(isDeleting || showBackdrop ) && <BackDropLoader />}
+      {(isDeleting || showBackdrop  || isFetching) && <BackDropLoader />}
     </>
   );
 };
