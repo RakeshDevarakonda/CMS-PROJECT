@@ -15,33 +15,25 @@ export const updateUsersAccountMutation = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const { manageUsersTotalData } = useSelector(manageContentSelector);
+  const { manageUsersTotalData, manageuser, finalSearchUsername } = useSelector(
+    manageContentSelector
+  );
 
   return useMutation({
     mutationKey: ["updateadminuseraccount"],
     mutationFn: updateUsersAccountApi,
     onSuccess: (data) => {
-      const updatedUser = data?.user;
-      const UserRole = data?.role;
-
-      if (updatedUser?._id && manageUsersTotalData[UserRole]) {
-        const roleArray = [...manageUsersTotalData[UserRole]];
-
-        const updatedIndex = roleArray.findIndex(
-          (e) => e._id === updatedUser._id
-        );
-
-        if (updatedIndex !== -1) {
-          roleArray[updatedIndex] = updatedUser;
-
-          const updatedUsersData = {
-            ...manageUsersTotalData,
-            [UserRole]: roleArray,
+      queryClient.setQueryData(
+        ["fetchAllUsersInAdmin", manageuser, finalSearchUsername],
+        (oldData) => {
+          return {
+            ...oldData,
+            getUsers: oldData.getUsers.map((user) =>
+              user._id === data.user._id ? data.user : user
+            ),
           };
-
-          dispatch(setManageUsersTotalData(updatedUsersData));
         }
-      }
+      );
     },
     onError: (error) => {
       dispatch(

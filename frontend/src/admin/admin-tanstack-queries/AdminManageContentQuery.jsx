@@ -4,7 +4,6 @@ import { fetchAdminContentApi } from "../admin-apis/FetchAdminContentApi";
 
 export const useGetAdminContentQuery = (params,isAdmin,manageuser) => {
 
-  console.log(manageuser)
   return useQuery({
     queryKey: ["adminmanagecontent",params],
     queryFn: ()=>fetchAdminContentApi(params),

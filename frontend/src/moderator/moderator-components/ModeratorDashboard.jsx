@@ -196,13 +196,21 @@ const ModeratorDashboard = () => {
   }, [isSuccess, statsData, dispatch]);
 
   const stats = useMemo(() => {
-    const total = dataCount?.totalPosts || 0;
-    const approved = dataCount?.approvedCount || 0;
-    const pending = dataCount?.pendingCount || 0;
-    const rejected = dataCount?.rejectedCount || 0;
-    const adminrechanged = dataCount?.adminrechangedCount || 0;
+    const total = dataCount?.total || 0;
+    const approved = dataCount?.approved || 0;
+    const pending = dataCount?.pending || 0;
+    const rejected = dataCount?.rejected || 0;
+    const adminrechanged = dataCount?.adminrechanged || 0;
 
     return [
+      {
+        label: "Pending",
+        value: pending,
+        icon: statusColors.Pending.icon,
+        percent: total ? Math.round((pending / total) * 100) : 0,
+        description: "Pending review",
+        color: statusColors.Pending,
+      },
       {
         label: "Total",
         value: total,
@@ -219,14 +227,7 @@ const ModeratorDashboard = () => {
         description: "Approved submissions",
         color: statusColors.Approved,
       },
-      {
-        label: "Pending",
-        value: pending,
-        icon: statusColors.Pending.icon,
-        percent: total ? Math.round((pending / total) * 100) : 0,
-        description: "Pending review",
-        color: statusColors.Pending,
-      },
+
       {
         label: "Rejected",
         value: rejected,
@@ -246,13 +247,13 @@ const ModeratorDashboard = () => {
     ];
   }, [dataCount]);
 
-  if(isLoading){
-    return(
+  if (isLoading) {
+    return (
       <>
-      <ModeratorDashboardSkeleton />
-      <GlobalDashboardSkeleton />
+        <ModeratorDashboardSkeleton />
+        <GlobalDashboardSkeleton />
       </>
-    )
+    );
   }
 
   return (
@@ -301,10 +302,10 @@ const ModeratorDashboard = () => {
             <Grid
               key={stat.label}
               sx={{
-                height: stat.label === "Total" ? "200px" : "auto",
+                height: stat.label === "Pending" ? "200px" : "auto",
 
                 flex:
-                  stat.label === "Total"
+                  stat.label === "Pending"
                     ? "0 0 100%"
                     : {
                         xs: "0 0 100%",
@@ -350,10 +351,10 @@ const StatCard = ({ stat, currentTheme, isDark, allStats }) => {
         position: "relative",
         overflow: "hidden",
         display: "flex",
-        flexDirection: stat.label === "Total" ? "row" : "column",
+        flexDirection: stat.label === "Pending" ? "row" : "column",
       }}
     >
-      {stat.label === "Total" ? (
+      {stat.label === "Pending" ? (
         <>
           <Box
             sx={{
@@ -408,7 +409,7 @@ const StatCard = ({ stat, currentTheme, isDark, allStats }) => {
               {stat.label} Posts
             </Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
-              {allStats.slice(1).map((subStat) => (
+              {allStats.slice(2).map((subStat) => (
                 <Grid key={subStat.label}>
                   <Box
                     sx={{
@@ -432,7 +433,7 @@ const StatCard = ({ stat, currentTheme, isDark, allStats }) => {
                         color: currentTheme.textSecondary,
                       }}
                     >
-                      {subStat.label} ({subStat.percent}%)
+                      {subStat.label} ({subStat.value})
                     </Typography>
                   </Box>
                 </Grid>
@@ -491,61 +492,6 @@ const StatCard = ({ stat, currentTheme, isDark, allStats }) => {
               pt: 2,
             }}
           >
-            <Box
-              sx={{
-                position: "relative",
-                display: "inline-flex",
-                mr: 2,
-              }}
-            >
-              <CircularProgress
-                variant="determinate"
-                value={stat.percent}
-                size={100}
-                thickness={4}
-                sx={{
-                  color: stat.color.main,
-                }}
-              />
-              <Box
-                sx={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    inset: 0,
-                    borderRadius: "50%",
-                    boxShadow: "inset 0 0 8px rgba(0,0,0,0.1)",
-                    pointerEvents: "none",
-                  },
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  component="div"
-                  sx={{
-                    color: stat.color.main,
-                    fontWeight: 800,
-                    fontSize: "1rem",
-
-                    textShadow: `0 0 4px ${alpha(stat.color.main, 0.2)})`,
-
-                    animation: "bounce 0.5s ease",
-                    "@keyframes bounce": {
-                      "0%, 100%": { transform: "scale(1)" },
-                      "50%": { transform: "scale(1.2)" },
-                    },
-                  }}
-                >
-                  {stat.percent}%
-                </Typography>
-              </Box>
-            </Box>
             <Box sx={{ ml: 1 }}>
               <Typography
                 variant="h6"
@@ -555,15 +501,6 @@ const StatCard = ({ stat, currentTheme, isDark, allStats }) => {
                 }}
               >
                 {stat.value}
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: currentTheme.textSecondary,
-                  display: "block",
-                }}
-              >
-                of {allStats[0].value}
               </Typography>
             </Box>
           </Box>

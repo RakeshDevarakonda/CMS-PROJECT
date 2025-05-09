@@ -174,7 +174,7 @@ const AdminDashboard = () => {
     dispatch(setTrendData(trend));
 
     dispatch(setStatusCounts(statusData));
-  }, [statsData, isSuccess]);
+  }, [statsData,dataCount, isSuccess]);
 
   const stats = useMemo(() => {
     const totalPosts = dataCount?.totalPosts || 0;

@@ -23,6 +23,7 @@ import { colors } from "../../../utils/Colors.jsx"; // Adjust the import path as
 import { globalReduxSelector } from "../../../global-redux/GlobalRedux.jsx"; // Adjust the import path as needed
 import { Link } from "react-router-dom";
 import { getAllArticlesQuery } from "../../home-page-tanstack-queries/GetAllArticlesQuery.jsx";
+import LatestArticlesSkeleton from "../../../skeletons/LatestArticlesSkeleton.jsx";
 
 function LatestArticles({ allarticles }) {
   // Get the dark mode state from Redux
@@ -47,14 +48,12 @@ function LatestArticles({ allarticles }) {
 
   useEffect(() => {
     if (articlesData && isSuccess) {
-      console.log(articlesData);
       setarticles(articlesData?.posts);
       setTotalPages(articlesData?.totalPages);
     }
   }, [articlesData, isSuccess]);
 
   const formatDate = (dateString) => {
-    console.log(dateString);
     if (!dateString) return "";
     const date = new Date(dateString);
     const options = {
@@ -70,6 +69,15 @@ function LatestArticles({ allarticles }) {
     transform: "translateY(0)",
     transition: "opacity 0.7s ease, transform 0.7s ease",
   };
+
+  if (isLoading) {
+    return (
+      <LatestArticlesSkeleton
+        allarticles={allarticles}
+        count={allarticles ? "9" : "3"}
+      />
+    );
+  }
 
   return (
     <Box
@@ -172,7 +180,6 @@ function LatestArticles({ allarticles }) {
                   new DOMParser().parseFromString(sanitizedContent, "text/html")
                     .body.textContent || "";
 
-                console.log(plainText);
 
                 const truncatedContent =
                   plainText.length > 50

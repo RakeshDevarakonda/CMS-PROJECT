@@ -10,6 +10,7 @@ export const useGetAdminStatsQuery = () => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     keepPreviousData: true,
+
     retry: 2,
   });
 };

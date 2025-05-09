@@ -235,7 +235,7 @@ export const changePostStatusByAdmin = async (req, res, next) => {
       throwError(400, "Cannot change the status of older versions of posts.");
     }
 
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate("userId", "name role");
     if (!post) {
       throwError(404, "Post not found.");
     }
@@ -273,6 +273,18 @@ export const changePostStatusByAdmin = async (req, res, next) => {
 
     await updateAdminAnalytics(post.status, status);
 
+    const adminanalyticsData = await AdminAnalytics.findOne();
+
+    const statusSummary = {
+      totalPosts: adminanalyticsData.totalPosts,
+      creator: adminanalyticsData.creator,
+      moderator: adminanalyticsData.moderator,
+      deleted: adminanalyticsData.deleted,
+      approved: adminanalyticsData.approved,
+      pending: adminanalyticsData.pending,
+      rejected: adminanalyticsData.rejected,
+    };
+
     post.status = status;
 
     const existingModerationIndex = post.moderatedBy.findIndex(
@@ -302,6 +314,7 @@ export const changePostStatusByAdmin = async (req, res, next) => {
     res.status(200).json({
       message: "Post status updated successfully.",
       post,
+      dataCount: statusSummary,
     });
   } catch (error) {
     console.log(error);
@@ -524,6 +537,7 @@ export const getSinglePostByAdmin = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getAdminStats = async (req, res, next) => {
   try {
     let analytics = await AdminAnalytics.findOne();

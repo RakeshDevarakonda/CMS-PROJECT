@@ -30,7 +30,9 @@ import {
   setContentStatusFilter,
   setContentTotalData,
   setFinalSearchUsername,
+  setManageuser,
   setManageUsersTotalData,
+  setParams,
   setSelectedFilterType,
   setVersionList,
 } from "../../global-redux/ManageContentSlice.jsx";
@@ -48,6 +50,7 @@ import ManageContentFilters from "./ManageContentFilters.jsx";
 import ManageContentHeader from "./ManageContentHeader.jsx";
 import { fetchAllUsersInAdmin } from "../../admin/admin-tanstack-queries/FetchAllUsersInAdminQuery.jsx";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ManageContent = ({ statusfilter, userDataType }) => {
   const navigate = useNavigate();
@@ -85,19 +88,29 @@ const ManageContent = ({ statusfilter, userDataType }) => {
   const colors = themeColors[theme];
 
   const manageuser = useMemo(() => {
-    if (userDataType) {
-      if (userDataType === "creator") return "creator";
-      if (userDataType === "moderator") return "moderator";
-      if (userDataType === "admin") return "admin";
-      return userDataType;
+    const typeFromUserData = ["creator", "moderator", "admin"].includes(
+      userDataType
+    )
+      ? userDataType
+      : null;
+
+    const typeFromFilter =
+      selectedFilterType === "Creator List"
+        ? "creator"
+        : selectedFilterType === "Moderator List"
+        ? "moderator"
+        : selectedFilterType === "Admin List"
+        ? "admin"
+        : null;
+
+    const resolvedType = typeFromUserData ?? typeFromFilter;
+
+    if (resolvedType) {
+      dispatch(setManageuser(resolvedType));
     }
 
-    if (selectedFilterType === "Creator List") return "creator";
-    if (selectedFilterType === "Moderator List") return "moderator";
-    if (selectedFilterType === "Admin List") return "admin";
-
-    return null;
-  }, [userDataType, selectedFilterType]);
+    return resolvedType;
+  }, [userDataType, selectedFilterType, dispatch]);
 
   const isFirstLoad = useRef(true);
   const params = useMemo(
@@ -105,7 +118,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
       contentCurrentPageNumber,
       contentRowsPerPage,
       finalSearchterm: finalSearchterm || null,
-      contentStatusFilter: contentStatusFilter || null, // <-- Redux will get updated when statusfilter changes
+      contentStatusFilter: contentStatusFilter || null,
       contentDateFilter: contentDateFilter || null,
       finalStartDate: finalStartDate || null,
       finalEndDate: finalEndDate || null,
@@ -126,6 +139,10 @@ const ManageContent = ({ statusfilter, userDataType }) => {
       isSearchModeratorName,
     ]
   );
+
+  useEffect(() => {
+    dispatch(setParams(params));
+  }, [params]);
 
   useEffect(() => {
     if (statusfilter) {
@@ -296,7 +313,6 @@ const ManageContent = ({ statusfilter, userDataType }) => {
         dispatch(setContentDataCount(backendDataintable.statusSummary));
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     backendDataintable,
     refreshKey,
@@ -339,7 +355,6 @@ const ManageContent = ({ statusfilter, userDataType }) => {
 
       dispatch(setContentTotalData(updatedContentTotalData));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleversiondata, refreshKey, versionList, versionposts]);
 
   if (isFirstLoad.current && loadingData) {
@@ -385,14 +400,14 @@ const ManageContent = ({ statusfilter, userDataType }) => {
             flexDirection: "row",
             width: "100%",
             justifyContent: "space-between",
-            alignItems: "center", // vertically center content
-            padding: "12px 20px", // add padding for spacing
+            alignItems: "center",
+            padding: "12px 20px",
             borderTop: `1px solid ${colors.border}`,
             backgroundColor: colors.tableHeaderBg,
           }}
         >
           <Typography
-            variant="h6" // makes the text larger
+            variant="h6"
             fontWeight="bold"
             sx={{ fontSize: "1.5rem", color: "rgb(99, 102, 241)" }}
           >
@@ -423,16 +438,14 @@ const ManageContent = ({ statusfilter, userDataType }) => {
               borderRadius: 0,
               boxShadow: "none",
               backgroundColor: colors.background,
-              overflowX: "auto", // Enable horizontal scrolling
-              overflowY: "auto", // Keep vertical scrolling
+              overflowX: "auto",
+              overflowY: "auto",
 
-              // Combined scrollbar styles for both directions
-              scrollbarColor: `${colors.dialogBackground} ${colors.background}`, // Firefox
+              scrollbarColor: `${colors.dialogBackground} ${colors.background}`,
 
-              // WebKit scrollbars (Chrome, Safari, Edge)
               "&::-webkit-scrollbar": {
-                width: "50px", // Vertical scrollbar width
-                height: "20px", // Horizontal scrollbar height
+                width: "50px",
+                height: "20px",
               },
               "&::-webkit-scrollbar-track": {
                 background: "transparent",
@@ -445,7 +458,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
                   background: "#ffffff",
                 },
               },
-              // Horizontal scrollbar specific
+
               "&::-webkit-scrollbar:horizontal": {
                 height: "5px",
               },

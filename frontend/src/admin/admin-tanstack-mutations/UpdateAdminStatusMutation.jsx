@@ -6,35 +6,68 @@ import {
   toggleBackdrop,
 } from "../../global-redux/GlobalRedux.jsx";
 import { updateAdminStatusApi } from "../admin-apis/UpdateAdminStatusApi.jsx";
-import { manageContentSelector, setAdminPostStatusDetails, setContentTotalData } from "../../global-redux/ManageContentSlice.jsx";
+import {
+  manageContentSelector,
+  setAdminPostStatusDetails,
+  setContentTotalData,
+} from "../../global-redux/ManageContentSlice.jsx";
+import { setDataCount } from "../../global-redux/AdminDashboardSlice.jsx";
 
 export const updateAdminStatusMutation = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const {contentTotalData}=useSelector(manageContentSelector)
+  const { contentTotalData, params } = useSelector(manageContentSelector);
 
   return useMutation({
     mutationKey: ["updateadminstatusmutaion"],
     mutationFn: updateAdminStatusApi,
     onSuccess: (data) => {
-      const updatedPost = data?.post;
-      const totalData = [...contentTotalData];
+      queryClient.setQueryData(["adminmanagecontent", params], (oldData) => {
+        const updatedPost = data?.post;
+        const totalData = [...contentTotalData];
 
-      console.log(totalData, updatedPost);
+        console.log(totalData, updatedPost);
 
-      if (updatedPost?._id) {
-        const updatedIndex = totalData.findIndex(
-          (e) => e._id === updatedPost._id
-        );
+        if (updatedPost?._id) {
+          const updatedIndex = totalData.findIndex(
+            (e) => e._id === updatedPost._id
+          );
 
-        console.log(updatedIndex);
+          console.log(updatedIndex);
 
-        if (updatedIndex !== -1) {
-          totalData[updatedIndex] = updatedPost;
-          dispatch(setContentTotalData(totalData));
+          if (updatedIndex !== -1) {
+            totalData[updatedIndex] = updatedPost;
+
+            const newPosts = {
+              ...oldData,
+              posts: totalData,
+            };
+
+            console.log(newPosts);
+
+            return newPosts;
+          }
         }
-      }
+        return oldData;
+      });
+
+      queryClient.setQueryData(["GetAdminStatsQuery"], (oldData) => {
+        console.log("Old GetAdminStatsQuery data:", oldData);
+
+        if (!oldData) {
+          console.warn("No existing GetAdminStatsQuery data found");
+          return oldData;
+        }
+
+        const newData = {
+          ...oldData,
+          dataCount: data?.dataCount,
+        };
+
+        console.log("New GetAdminStatsQuery data:", newData);
+        return newData;
+      });
 
       dispatch(setAdminPostStatusDetails({}));
     },
@@ -68,8 +101,7 @@ export const updateAdminStatusMutation = () => {
         });
       }
     },
-    onSettled: () => {
-      // queryClient.refetchQueries(["adminmanagecontent"]);
+    onSettled: (data) => {
       dispatch(toggleBackdrop());
     },
   });

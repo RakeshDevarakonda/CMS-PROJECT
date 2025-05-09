@@ -23,6 +23,7 @@ import DashboardStats from "./DashboardStats.jsx";
 import { creatorDashboardSelector } from "../global-redux/CreatorDashBoardslice.jsx";
 import { adminDashboardSelector } from "../global-redux/AdminDashboardSlice.jsx";
 import { moderatorDashboardSelector } from "./../global-redux/ModeratorDashboardSlice";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Status colors and configuration
 
@@ -32,7 +33,9 @@ const GlobalDashboard = ({ getStatusConfig }) => {
   const theme = colors[colorMode];
   const statusConfig = getStatusConfig();
 
-  // console.log(userDetails);
+  const queryClient= useQueryClient();
+
+
 
   const {
     dataCount: creatordatacount,

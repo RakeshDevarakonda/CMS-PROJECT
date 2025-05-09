@@ -36,6 +36,7 @@ export const updateModeratorStatusMutation = () => {
           dispatch(setContentTotalData(totalData));
         }
       }
+
     },
     onError: (error) => {
       dispatch(
@@ -52,7 +53,7 @@ export const updateModeratorStatusMutation = () => {
       });
     },
     onSettled: () => {
-      // queryClient.refetchQueries(["moderatormanagecontent"]);
+
       dispatch(toggleBackdrop());
     },
   });

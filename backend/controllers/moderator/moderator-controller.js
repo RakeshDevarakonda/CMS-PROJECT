@@ -16,6 +16,8 @@ export const getModeratorStatsController = async (req, res, next) => {
     let analytics = await ModeratortAnalytics.findOne({ userId });
     let pendingPosts = await Post.countDocuments({ status: "pending" });
 
+
+
     if (!analytics) {
       analytics = new ModeratortAnalytics({
         userId,
@@ -204,7 +206,7 @@ export const changePostStatus = async (req, res, next) => {
       throwError(400, "Cannot change the status of older versions of posts.");
     }
 
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate("userId", "name role");
     if (!post) {
       throwError(404, "Post not found.");
     }

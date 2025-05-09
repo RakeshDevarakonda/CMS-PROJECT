@@ -36,7 +36,13 @@ const ArticlePageSkeleton = () => {
           height={60}
           width="90%"
           animation="wave"
-          sx={{ mb: 1 }}
+          sx={{
+            p: { xs: 2, md: 4 },
+            mb: 4,
+            borderRadius: 2,
+            bgcolor: themeColors.paper,
+            border: `1px solid ${themeColors.divider}`,
+          }}
         />
 
         <Box
@@ -46,17 +52,47 @@ const ArticlePageSkeleton = () => {
             alignItems: "center",
             flexWrap: "wrap",
             mb: 2,
+            bgcolor: themeColors.paper,
+            border: `1px solid ${themeColors.divider}`,
           }}
         >
           <Box
             sx={{ display: "flex", alignItems: "center", mb: { xs: 2, sm: 0 } }}
           >
-            <Skeleton variant="circular" width={40} height={40} animation="wave" sx={{ mr: 1.5 }} />
-            
+            <Skeleton
+              variant="circular"
+              width={40}
+              height={40}
+              animation="wave"
+              sx={{
+                mr: 1.5,
+                bgcolor: themeColors.paper,
+                border: `1px solid ${themeColors.divider}`,
+              }}
+            />
+
             <Box>
-              <Skeleton variant="text" width={120} height={24} animation="wave" />
-              <Box sx={{ display: "flex", alignItems: "center", mt: 0.5 }}>
-                <Skeleton variant="text" width={150} height={18} animation="wave" />
+              <Skeleton
+                variant="text"
+                width={120}
+                height={24}
+                animation="wave"
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mt: 0.5,
+                  bgcolor: themeColors.paper,
+                
+                }}
+              >
+                <Skeleton
+                  variant="text"
+                  width={150}
+                  height={18}
+                  animation="wave"
+                />
               </Box>
             </Box>
           </Box>
@@ -70,13 +106,14 @@ const ArticlePageSkeleton = () => {
             gap={{ xs: "10px", sm: "16px" }}
           >
             {[1, 2, 3, 4].map((_, index) => (
-              <Skeleton 
-                key={index} 
-                variant="rounded" 
-                width={80} 
-                height={32} 
-                animation="wave" 
-                sx={{ borderRadius: 1 }}
+              <Skeleton
+                key={index}
+                variant="rounded"
+                width={80}
+                height={32}
+                animation="wave"
+                sx={{ borderRadius: 1, bgcolor: themeColors.paper,
+            border: `1px solid ${themeColors.divider}`, }}
               />
             ))}
           </Stack>
@@ -106,30 +143,30 @@ const ArticlePageSkeleton = () => {
           {/* Paragraph skeletons */}
           {[...Array(5)].map((_, index) => (
             <React.Fragment key={index}>
-              <Skeleton 
-                variant="text" 
-                height={20} 
-                width={randomWidth(85, 100)} 
-                animation="wave" 
+              <Skeleton
+                variant="text"
+                height={20}
+                width={randomWidth(85, 100)}
+                animation="wave"
                 sx={{ mb: 1 }}
               />
-              <Skeleton 
-                variant="text" 
-                height={20} 
-                width={randomWidth(90, 100)} 
-                animation="wave" 
+              <Skeleton
+                variant="text"
+                height={20}
+                width={randomWidth(90, 100)}
+                animation="wave"
                 sx={{ mb: 1 }}
               />
-              <Skeleton 
-                variant="text" 
-                height={20} 
-                width={randomWidth(70, 95)} 
-                animation="wave" 
+              <Skeleton
+                variant="text"
+                height={20}
+                width={randomWidth(70, 95)}
+                animation="wave"
                 sx={{ mb: 1 }}
               />
-              <Skeleton 
-                variant="text" 
-                height={20} 
+              <Skeleton
+                variant="text"
+                height={20}
                 width={randomWidth(40, 90)}
                 animation="wave"
                 sx={{ mb: 3 }}
@@ -144,9 +181,27 @@ const ArticlePageSkeleton = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid>
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Skeleton variant="circular" width={40} height={40} animation="wave" sx={{ mr: 1 }} />
-              <Skeleton variant="circular" width={40} height={40} animation="wave" sx={{ mr: 1 }} />
-              <Skeleton variant="circular" width={40} height={40} animation="wave" sx={{ mr: 1 }} />
+              <Skeleton
+                variant="circular"
+                width={40}
+                height={40}
+                animation="wave"
+                sx={{ mr: 1 }}
+              />
+              <Skeleton
+                variant="circular"
+                width={40}
+                height={40}
+                animation="wave"
+                sx={{ mr: 1 }}
+              />
+              <Skeleton
+                variant="circular"
+                width={40}
+                height={40}
+                animation="wave"
+                sx={{ mr: 1 }}
+              />
             </Box>
           </Grid>
 
@@ -156,7 +211,13 @@ const ArticlePageSkeleton = () => {
               justifyContent: { xs: "flex-start", sm: "flex-end" },
             }}
           >
-            <Skeleton variant="circular" width={40} height={40} animation="wave" sx={{ mr: 1 }} />
+            <Skeleton
+              variant="circular"
+              width={40}
+              height={40}
+              animation="wave"
+              sx={{ mr: 1 }}
+            />
             <Skeleton variant="text" width={80} height={30} animation="wave" />
           </Grid>
         </Grid>
@@ -186,10 +247,26 @@ const ArticlePageSkeleton = () => {
 
         {/* Add Comment */}
         <Box sx={{ mb: 4, display: "flex", alignItems: "flex-start" }}>
-          <Skeleton variant="circular" width={40} height={40} animation="wave" sx={{ mr: 1.5 }} />
+          <Skeleton
+            variant="circular"
+            width={40}
+            height={40}
+            animation="wave"
+            sx={{ mr: 1.5 }}
+          />
           <Box sx={{ flexGrow: 1 }}>
-            <Skeleton variant="rectangular" height={90} animation="wave" sx={{ mb: 1 }} />
-            <Skeleton variant="rectangular" width={120} height={36} animation="wave" />
+            <Skeleton
+              variant="rectangular"
+              height={90}
+              animation="wave"
+              sx={{ mb: 1 }}
+            />
+            <Skeleton
+              variant="rectangular"
+              width={120}
+              height={36}
+              animation="wave"
+            />
           </Box>
         </Box>
 
@@ -199,7 +276,13 @@ const ArticlePageSkeleton = () => {
         {[...Array(3)].map((_, index) => (
           <React.Fragment key={index}>
             <Box sx={{ display: "flex", width: "100%", mb: 2 }}>
-              <Skeleton variant="circular" width={40} height={40} animation="wave" sx={{ mr: 1.5 }} />
+              <Skeleton
+                variant="circular"
+                width={40}
+                height={40}
+                animation="wave"
+                sx={{ mr: 1.5 }}
+              />
               <Box sx={{ width: "100%" }}>
                 <Box
                   sx={{
@@ -209,15 +292,38 @@ const ArticlePageSkeleton = () => {
                   }}
                 >
                   <Box>
-                    <Skeleton variant="text" width={120} height={20} animation="wave" />
-                    <Skeleton variant="text" width={80} height={16} animation="wave" />
+                    <Skeleton
+                      variant="text"
+                      width={120}
+                      height={20}
+                      animation="wave"
+                    />
+                    <Skeleton
+                      variant="text"
+                      width={80}
+                      height={16}
+                      animation="wave"
+                    />
                   </Box>
                 </Box>
-                <Skeleton variant="text" width="90%" height={20} animation="wave" sx={{ mt: 1 }} />
-                <Skeleton variant="text" width="85%" height={20} animation="wave" />
+                <Skeleton
+                  variant="text"
+                  width="90%"
+                  height={20}
+                  animation="wave"
+                  sx={{ mt: 1 }}
+                />
+                <Skeleton
+                  variant="text"
+                  width="85%"
+                  height={20}
+                  animation="wave"
+                />
               </Box>
             </Box>
-            {index < 2 && <Divider sx={{ my: 2, borderColor: themeColors.divider }} />}
+            {index < 2 && (
+              <Divider sx={{ my: 2, borderColor: themeColors.divider }} />
+            )}
           </React.Fragment>
         ))}
       </Paper>
@@ -249,8 +355,8 @@ const ArticlePageSkeleton = () => {
                 overflow: "hidden",
               }}
             >
-              <Skeleton 
-                variant="rectangular" 
+              <Skeleton
+                variant="rectangular"
                 width={{ xs: "100%", sm: 200 }}
                 height={{ xs: 180, sm: 200 }}
                 animation="wave"
@@ -264,16 +370,54 @@ const ArticlePageSkeleton = () => {
                     flexWrap: "wrap",
                   }}
                 >
-                  <Skeleton variant="text" width={100} height={16} animation="wave" />
-                  <Skeleton variant="text" width={80} height={16} animation="wave" />
+                  <Skeleton
+                    variant="text"
+                    width={100}
+                    height={16}
+                    animation="wave"
+                  />
+                  <Skeleton
+                    variant="text"
+                    width={80}
+                    height={16}
+                    animation="wave"
+                  />
                 </Box>
 
-                <Skeleton variant="text" width="90%" height={28} animation="wave" sx={{ mb: 1 }} />
-                <Skeleton variant="text" width="70%" height={28} animation="wave" sx={{ mb: 2 }} />
+                <Skeleton
+                  variant="text"
+                  width="90%"
+                  height={28}
+                  animation="wave"
+                  sx={{ mb: 1 }}
+                />
+                <Skeleton
+                  variant="text"
+                  width="70%"
+                  height={28}
+                  animation="wave"
+                  sx={{ mb: 2 }}
+                />
 
-                <Skeleton variant="text" width="100%" height={18} animation="wave" />
-                <Skeleton variant="text" width="95%" height={18} animation="wave" />
-                <Skeleton variant="text" width="90%" height={18} animation="wave" sx={{ mb: 2 }} />
+                <Skeleton
+                  variant="text"
+                  width="100%"
+                  height={18}
+                  animation="wave"
+                />
+                <Skeleton
+                  variant="text"
+                  width="95%"
+                  height={18}
+                  animation="wave"
+                />
+                <Skeleton
+                  variant="text"
+                  width="90%"
+                  height={18}
+                  animation="wave"
+                  sx={{ mb: 2 }}
+                />
 
                 <Box
                   sx={{
@@ -284,11 +428,27 @@ const ArticlePageSkeleton = () => {
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Skeleton variant="circular" width={32} height={32} animation="wave" sx={{ mr: 1.5 }} />
-                    <Skeleton variant="text" width={80} height={16} animation="wave" />
+                    <Skeleton
+                      variant="circular"
+                      width={32}
+                      height={32}
+                      animation="wave"
+                      sx={{ mr: 1.5 }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width={80}
+                      height={16}
+                      animation="wave"
+                    />
                   </Box>
 
-                  <Skeleton variant="rounded" width={60} height={24} animation="wave" />
+                  <Skeleton
+                    variant="rounded"
+                    width={60}
+                    height={24}
+                    animation="wave"
+                  />
                 </Box>
               </CardContent>
             </Card>
