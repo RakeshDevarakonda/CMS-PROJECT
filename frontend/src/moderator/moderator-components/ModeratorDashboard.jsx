@@ -34,8 +34,11 @@ import {
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetModeratorStatsQuery } from "../moderator-tanstack-queries/ModeratorStatsQuery";
+import ModeratorDashboardSkeleton from "../../skeletons/ModeratorDashboardSkeleton";
+import { globalReduxSelector } from "../../global-redux/GlobalRedux";
+import GlobalDashboardSkeleton from "../../skeletons/CreatorDashboardSkeleton";
 
-const ModeratorDashboard = ({ theme = "dark" }) => {
+const ModeratorDashboard = () => {
   const dispatch = useDispatch();
 
   const { dataCount } = useSelector(moderatorDashboardSelector);
@@ -47,7 +50,9 @@ const ModeratorDashboard = ({ theme = "dark" }) => {
     isError,
   } = useGetModeratorStatsQuery();
 
-  const isDark = theme === "dark";
+  const { darkMode } = useSelector(globalReduxSelector);
+
+  const isDark = darkMode;
 
   const getStatusConfig = () => ({
     Total: {
@@ -111,6 +116,8 @@ const ModeratorDashboard = ({ theme = "dark" }) => {
     },
   };
 
+  const theme = darkMode ? "dark" : "light";
+
   const currentTheme = themeColors[theme] || themeColors.light;
 
   const statusColors = {
@@ -155,7 +162,7 @@ const ModeratorDashboard = ({ theme = "dark" }) => {
 
     const statusData = statsData?.dataCount
       ? Object.entries(statsData?.dataCount)
-          .filter(([key]) => !["total","adminrechanged"].includes(key))
+          .filter(([key]) => !["total", "adminrechanged"].includes(key))
           .map(([status, value]) => {
             const key = status.charAt(0).toUpperCase() + status.slice(1);
             return {
@@ -239,16 +246,13 @@ const ModeratorDashboard = ({ theme = "dark" }) => {
     ];
   }, [dataCount]);
 
-  if (isLoading) {
-    return <Box>Loading...</Box>;
-  }
-
-  if (isError) {
-    return <Box>Error occurred!</Box>;
-  }
-
-  if (!stats.length) {
-    return <Box>No data available</Box>;
+  if(isLoading){
+    return(
+      <>
+      <ModeratorDashboardSkeleton />
+      <GlobalDashboardSkeleton />
+      </>
+    )
   }
 
   return (

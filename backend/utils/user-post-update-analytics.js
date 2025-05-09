@@ -10,6 +10,20 @@ export const updateUserAnalytics = async (
   try {
     let userAnalytics = await UserAnalytics.findOne({ userId });
 
+    if (!userAnalytics) {
+      userAnalytics = new UserAnalytics({
+        userId: req.id,
+        totalPosts: 0,
+        draftCount: 0,
+        pendingCount: 0,
+        approvedCount: 0,
+        rejectedCount: 0,
+        deletedCount: 0,
+      });
+
+      await userAnalytics.save();
+    }
+
     switch (actionType) {
       case "create":
         userAnalytics.totalPosts += 1;

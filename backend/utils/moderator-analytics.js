@@ -11,6 +11,7 @@ export const updateModeratorAnalytics = async (
   try {
     let analytics = await ModeratortAnalytics.findOne({ userId });
 
+
     if (!analytics) {
       analytics = new ModeratortAnalytics({
         userId,
@@ -19,6 +20,7 @@ export const updateModeratorAnalytics = async (
         adminrechangedCount: 0,
         approvedCount: 0,
       });
+      await analytics.save();
     }
 
     switch (actionType) {

@@ -64,6 +64,7 @@ import { getSinglePostQuery } from "../../home-page-tanstack-queries/GetSinglePo
 import { Link, useLocation, useParams } from "react-router-dom";
 import { getCommentstQuery } from "../../home-page-tanstack-queries/GetCommentsQuery.jsx";
 import { postCommentMutation } from "../../home-page-tanstack_mutations/PostCommentMutation.jsx";
+import ArticlePageSkeleton from "../../../skeletons/ArticlePageSkeleton.jsx";
 
 const ArticlePage = () => {
   const { darkMode } = useSelector(globalReduxSelector);
@@ -93,7 +94,7 @@ const ArticlePage = () => {
     window.scrollTo({ top: 0, behavior: "auto" }); // disables smooth scroll
   }, [location]); // or use location.pathname if you're using that
 
-  const { data, isSuccess, isError, error } = getSinglePostQuery(id);
+  const { data, isSuccess, isLoading, isError, error } = getSinglePostQuery(id);
 
   const {
     data: getCommentsData,
@@ -264,6 +265,9 @@ const ArticlePage = () => {
     });
   };
 
+  if (isLoading) {
+    return <ArticlePageSkeleton />;
+  }
   return (
     <Box sx={{ maxWidth: 1200, margin: "0 auto", px: { xs: 0, md: 4 }, py: 4 }}>
       <Box sx={{ mb: 4 }}>

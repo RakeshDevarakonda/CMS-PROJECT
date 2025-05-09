@@ -17,6 +17,9 @@ import {
   setTrendData,
 } from "../../global-redux/CreatorDashBoardslice.jsx";
 import { useDispatch, useSelector } from "react-redux";
+import DashboardStats from "../../global-reusable-components/DashboardStats.jsx";
+import GlobalDashboardSkeleton from "../../skeletons/CreatorDashboardSkeleton.jsx";
+import DashboardStatsSkeleton from "../../skeletons/DashboardStatsSkeleton.jsx";
 
 export default function CreatorDashboard() {
   const dispatch = useDispatch();
@@ -139,6 +142,15 @@ export default function CreatorDashboard() {
 
     dispatch(setTrendData(trend));
   }, [statsData]);
+
+  if (isCreatorLoading) {
+    return (
+      <>
+        <DashboardStatsSkeleton />;
+        <GlobalDashboardSkeleton />;
+      </>
+    );
+  }
 
   return <GlobalDashboard getStatusConfig={getStatusConfig} />;
 }

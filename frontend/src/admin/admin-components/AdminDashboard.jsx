@@ -35,6 +35,8 @@ import {
 } from "../../global-redux/AdminDashboardSlice.jsx";
 import { globalReduxSelector } from "../../global-redux/GlobalRedux.jsx";
 import { useGetAdminStatsQuery } from "../admin-tanstack-queries/AdminStatsQuery.jsx";
+import AdminDashboardSkeleton from "../../skeletons/AdminDashBoardSleleton.jsx";
+import GlobalDashboardSkeleton from "../../skeletons/CreatorDashboardSkeleton.jsx";
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -93,8 +95,6 @@ const AdminDashboard = () => {
 
   const { dataCount } = useSelector(adminDashboardSelector);
 
- 
-
   const muiTheme = useMuiTheme();
   const isXs = useMediaQuery(muiTheme.breakpoints.down("sm"));
 
@@ -132,7 +132,6 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (isSuccess && statsData) {
- 
       dispatch(setDataCount(statsData?.dataCount));
     }
 
@@ -247,6 +246,19 @@ const AdminDashboard = () => {
     ];
   }, [dataCount]);
 
+  if (isLoading) {
+    return (
+      <>
+        <AdminDashboardSkeleton
+          isDark={isDark}
+          isXs={isXs}
+          currentTheme={currentTheme}
+        />
+        
+        <GlobalDashboardSkeleton />;
+      </>
+    );
+  }
   return (
     <>
       <Box sx={{ backgroundColor: currentTheme.background, p: 4 }}>

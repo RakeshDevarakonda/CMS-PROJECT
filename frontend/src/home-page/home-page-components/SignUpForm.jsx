@@ -46,6 +46,7 @@ import { SignUpMutation } from "../home-page-tanstack_mutations/SignUpMutation.j
 
 import { FullPageLoader } from "../../utils/FullPageLoader.jsx";
 import { globalReduxSelector } from "../../global-redux/GlobalRedux.jsx";
+import BackDropLoader from "../../utils/BackDropLoader.jsx";
 
 const SignUpForm = () => {
   const signUpMutation = SignUpMutation();
@@ -76,7 +77,7 @@ const SignUpForm = () => {
   } = useSelector(signUpFormDataSelector);
 
   const handleChange = (e) => {
-    console.log(e.target.name)
+    console.log(e.target.name);
     const { name, value } = e.target;
     dispatch(setSignUpFormData({ [name]: value }));
 
@@ -140,7 +141,7 @@ const SignUpForm = () => {
 
       const update = { role: selectedRole };
 
-      console.log(signUpFormData)
+      console.log(signUpFormData);
 
       const updatedData = { ...signUpFormData, ...update };
       signUpMutation.mutate(updatedData);
@@ -698,6 +699,8 @@ const SignUpForm = () => {
           </Box>
         </Paper>
       </Container>
+
+      {isSignUpSubmitting && <BackDropLoader />}
     </>
   );
 };

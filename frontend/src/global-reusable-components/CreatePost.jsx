@@ -290,6 +290,11 @@ const CreatePost = () => {
       .jodit-filebrowser__files-item {
         border-color: ${colorScheme.divider} !important;
       }
+
+      .jodit-ui-input__input{
+       background-color: ${colorScheme.background} !important;
+        color: ${colorScheme.text} !important;
+      }
       .jodit-filebrowser__files-item:hover {
         background-color: ${alpha(colorScheme.primary, 0.05)} !important;
       }

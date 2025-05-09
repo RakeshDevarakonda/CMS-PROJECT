@@ -272,15 +272,20 @@ export default function NavbarSidebar() {
     if (!desktopOpen) {
       menuItems = [
         {
-          icon: <InsertChart />,
-          text: "All Data",
-          to: "dashboard/alldata",
+          icon: <DashboardIcon />,
+          text: "Dashboard",
+          to: "dashboard",
         },
-        {
-          icon: <HourglassEmpty />,
-          text: "Version Data",
-          to: "dashboard/versiondata",
-        },
+        // {
+        //   icon: <InsertChart />,
+        //   text: "All Data",
+        //   to: "dashboard/alldata",
+        // },
+        // {
+        //   icon: <HourglassEmpty />,
+        //   text: "Version Data",
+        //   to: "dashboard/versiondata",
+        // },
         { text: "Create Post", icon: <CreateIcon />, to: "createpost" },
         {
           icon: <InsertChart />,
@@ -321,7 +326,7 @@ export default function NavbarSidebar() {
         {
           text: "Dashboard",
           icon: <DashboardIcon />,
-          children: adminDashboardChildren,
+          to: "dashboard",
         },
         { text: "Create Post", icon: <CreateIcon />, to: "createpost" },
         {
@@ -891,7 +896,7 @@ export default function NavbarSidebar() {
               )}
 
               {/* Notifications */}
-              <Tooltip arrow title="notifications">
+              {/* <Tooltip arrow title="notifications">
                 <IconButton
                   color="inherit"
                   onClick={() => {
@@ -906,7 +911,7 @@ export default function NavbarSidebar() {
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
 
               {/* Theme Toggle */}
               <Tooltip arrow title={darkMode ? "light mode" : "dark mode"}>

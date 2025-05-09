@@ -743,7 +743,7 @@ export const createPostByAdmin = async (req, res, next) => {
 
     if (status === "pending") {
       await updateAdminAnalytics(null, status);
-      await updateAdminAnalytics(null, addposts);
+      await updateAdminAnalytics(null, "addposts");
     }
 
     res.status(201).json({

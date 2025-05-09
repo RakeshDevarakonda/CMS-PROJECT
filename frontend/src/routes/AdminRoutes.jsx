@@ -6,17 +6,15 @@ import AdminManageContent from "../admin/admin-components/AdminManageContent";
 import AdminProfileManagement from "../admin/admin-components/AdminProfileManagement";
 import AdminNavbar from "../admin/admin-components/AdminNavbar";
 import AdminCreatePost from "../admin/admin-components/AdminCreatePost";
-import NotificationCenter from './../global-reusable-components/Notification';
+import NotificationCenter from "./../global-reusable-components/Notification";
 
 export default function adminRoutes() {
   return (
     <>
       <Route element={<RoleBasedComponent allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminNavbar />}>
-          <Route index element={<Navigate to="dashboard/alldata" replace />} />
-          <Route path="dashboard" element={<Navigate to="alldata" replace />} />
-          <Route path="dashboard/alldata" element={<AdminDashboard />} />
-          <Route path="dashboard/versiondata" element={<AdminDashboard />} />
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="createpost" element={<AdminCreatePost />} />
 
           <Route

@@ -80,7 +80,6 @@ const GlobalDashboardSkeleton = () => {
         />
       </Box>
 
-      <DashboardStatsSkeleton />
 
       {/* Weekly Trend Chart Skeleton */}
       <Card sx={{ ...customStyles.card, mb: 3 }}>
