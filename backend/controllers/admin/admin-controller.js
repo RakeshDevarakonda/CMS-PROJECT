@@ -267,7 +267,9 @@ export const changePostStatusByAdmin = async (req, res, next) => {
       );
     }
 
-    await updateUserAnalytics(post.userId, "update", post.status, status);
+    if (post.role === "creator") {
+      await updateUserAnalytics(post.userId, "update", post.status, status);
+    }
 
     await updateAdminAnalytics(post.status, status);
 

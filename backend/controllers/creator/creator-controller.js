@@ -707,7 +707,7 @@ export const updatePostController = async (req, res, next) => {
     await updateAdminAnalytics(null, "pending");
     await updateAdminAnalytics(null, "addposts");
 
-    await updateUserAnalytics(req.id, "update", post.status, status);
+    await updateUserAnalytics(req.id, "create", null, status);
 
     const updated = await Post.findByIdAndUpdate(id, updatedPost, {
       new: true,

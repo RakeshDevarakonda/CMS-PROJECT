@@ -12,7 +12,7 @@ export const updateUserAnalytics = async (
 
     if (!userAnalytics) {
       userAnalytics = new UserAnalytics({
-        userId: req.id,
+        userId: userId,
         totalPosts: 0,
         draftCount: 0,
         pendingCount: 0,
