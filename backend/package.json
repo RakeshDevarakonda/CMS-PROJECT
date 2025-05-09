@@ -26,5 +26,8 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "esbuild": "^0.25.4"
+  }
 }

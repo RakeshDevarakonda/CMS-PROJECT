@@ -16,6 +16,10 @@ const moderatorAnalyticsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+
+moderatorAnalyticsSchema.index({ userId: 1 });
+
+
 const ModeratortAnalytics = mongoose.model(
   "ModeratortAnalytics",
   moderatorAnalyticsSchema

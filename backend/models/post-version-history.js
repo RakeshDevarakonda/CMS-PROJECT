@@ -67,4 +67,13 @@ const postHistorySchema = new mongoose.Schema({
   },
 });
 
+postHistorySchema.index({
+  postId: 1,
+  version: -1,
+  updatedAt: -1,
+  moderatedBy: -1,
+  userId: 1,
+  createdBy: 1,
+});
+
 export const PostHistory = mongoose.model("PostHistory", postHistorySchema);

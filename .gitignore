@@ -11,3 +11,5 @@ backend/logs.txt
 
 logs.txt      
 */logs.txt    
+
+frontend/dist/

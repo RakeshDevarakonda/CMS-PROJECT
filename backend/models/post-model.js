@@ -32,7 +32,6 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
 
-  
   status: {
     type: String,
     enum: ["draft", "approved", "pending", "rejected", "deleted"],
@@ -83,6 +82,14 @@ const postSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
   },
+});
+
+postSchema.index({
+  status: 1,
+  userId: 1,
+  version: -1,
+  createdAt: -1,
+  moderatedBy: -1,
 });
 
 export const Post = mongoose.model("Post", postSchema);

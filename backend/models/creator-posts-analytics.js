@@ -18,6 +18,11 @@ const userAnalyticsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+
+userAnalyticsSchema.index({ userId: 1 });
+
+
+
 export const UserAnalytics = mongoose.model(
   "UserAnalytics",
   userAnalyticsSchema
