@@ -20,7 +20,6 @@ export const useModeratorProfileDataUpdateMutation = () => {
     mutationFn: updateModeratorProfileDataApi,
     onSuccess: (data) => {
       dispatch(toggleEditing());
-      // queryClient.refetchQueries(["fetchmoderatorprofileData"]);
     },
     onError: (error) => {
       dispatch(toggleErrorAndSuccesDialog());
@@ -34,6 +33,11 @@ export const useModeratorProfileDataUpdateMutation = () => {
     },
     onSettled: () => {
       dispatch(submittingData());
+      queryClient.refetchQueries({
+        queryKey: ["fetchmoderatorprofileData"],
+        exact: true,
+      });
+      queryClient.refetchQueries({ queryKey: ["authStatus"], exact: true });
     },
   });
 };

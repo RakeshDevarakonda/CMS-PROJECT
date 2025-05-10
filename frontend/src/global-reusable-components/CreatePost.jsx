@@ -919,7 +919,7 @@ const CreatePost = () => {
             thumbnailFile={thumbnailFile}
           />
 
-          <Box sx={{ mb: 4, mb: 4 }}>
+          <Box sx={{ mb: 4}}>
             <Typography
               variant="subtitle1"
               sx={{

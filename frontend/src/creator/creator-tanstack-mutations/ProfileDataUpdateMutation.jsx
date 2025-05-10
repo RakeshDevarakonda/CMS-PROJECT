@@ -32,7 +32,8 @@ export const useProfileDataUpdateMutation = () => {
       );
     },
     onSettled: () => {
-      // This runs in both success and error cases — like finally
+      queryClient.refetchQueries({ queryKey: ["fetchcreatorprofileData"], exact: true });
+      queryClient.refetchQueries({ queryKey: ["authStatus"], exact: true });
       dispatch(submittingData());
     },
   });

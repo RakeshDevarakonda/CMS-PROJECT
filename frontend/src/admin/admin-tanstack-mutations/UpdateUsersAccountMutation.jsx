@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setErrorAndSuccesDialogMessage,
+  toggleBackdrop,
   toggleErrorAndSuccesDialog,
 } from "../../global-redux/GlobalRedux.jsx";
 import { updateUsersAccountApi } from "../admin-apis/UpdateUserAccountApi.jsx";
@@ -48,6 +49,7 @@ export const updateUsersAccountMutation = () => {
     },
     onSettled: () => {
       // queryClient.refetchQueries(["fetchAllUsersInAdmin"]);
+      dispatch(toggleBackdrop());
     },
   });
 };

@@ -850,14 +850,21 @@ export default function NavbarSidebar() {
               </IconButton>
 
               {isSmallScreen ? (
-                <>
-                  <Typography variant="h6" noWrap sx={{ fontWeight: 600 }}>
-                    Creator
-                  </Typography>
-                </>
+                <Typography variant="h6" noWrap sx={{ fontWeight: 600 }}>
+                  {userDetails?.role
+                    ? userDetails.role.charAt(0).toUpperCase() +
+                      userDetails.role.slice(1).toLowerCase()
+                    : ""}
+                </Typography>
               ) : (
                 <Typography variant="h6" noWrap sx={{ fontWeight: 600 }}>
-                  CMS Creator Dashboard
+                  {userDetails?.role
+                    ? `CMS ${userDetails.role
+                        .charAt(0)
+                        .toUpperCase()}${userDetails.role
+                        .slice(1)
+                        .toLowerCase()} Dashboard`
+                    : ""}
                 </Typography>
               )}
             </Box>

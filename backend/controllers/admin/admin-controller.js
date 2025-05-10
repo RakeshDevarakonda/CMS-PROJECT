@@ -380,7 +380,11 @@ export const updateAdminProfile = async (req, res, next) => {
           user.avatar = uploadedImageUrls[0];
         }
       } else {
-        console.warn("Image upload failed, continuing to update other fields");
+        console.log("result.error?.message")
+        if (result.error?.message?.startsWith("File size too large")) {
+          return throwError(400, "File size too large");
+        }
+        throwError(400, result.error?.message || "Image upload failed");
       }
     }
 

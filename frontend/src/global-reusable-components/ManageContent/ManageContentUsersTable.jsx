@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { globalReduxSelector } from "../../global-redux/GlobalRedux";
+import { globalReduxSelector, toggleBackdrop } from "../../global-redux/GlobalRedux";
 import useManageContentFunctions from "./ManageContentFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
@@ -103,6 +103,7 @@ export default function ManageContentUsersTable({ usersData, userDataType }) {
   const { mutate: updateAccountStatus } = updateUsersAccountMutation();
 
   const handleSwitchChange = (userId) => {
+    dispatch(toggleBackdrop());
     updateAccountStatus(userId);
   };
 

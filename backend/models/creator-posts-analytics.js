@@ -6,7 +6,6 @@ const userAnalyticsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      unique: true,
     },
     totalPosts: { type: Number, default: 0 },
     approvedCount: { type: Number, default: 0 },

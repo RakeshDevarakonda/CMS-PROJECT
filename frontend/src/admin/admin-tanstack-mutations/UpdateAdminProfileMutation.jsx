@@ -33,6 +33,7 @@ export const useAdminProfileDataUpdateMutation = () => {
     },
     onSettled: () => {
       dispatch(submittingData());
+      queryClient.refetchQueries({ queryKey: ["fetchadminprofileData"], exact: true });
       queryClient.refetchQueries({ queryKey: ["authStatus"], exact: true });
 
     },
