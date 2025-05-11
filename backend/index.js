@@ -61,7 +61,7 @@ app.use(cookieParser());
 app.use(loggerMiddleware);
 
 app.get("/", (req, res) => {
-  res.send("index");
+  res.redirect("https://cms-project-kappa.vercel.app");
 });
 
 app.post("/api/addurls", upload.array("file"), async (req, res, next) => {
