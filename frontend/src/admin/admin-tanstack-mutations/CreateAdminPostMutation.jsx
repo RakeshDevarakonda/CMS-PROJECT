@@ -15,24 +15,58 @@ import {
   setUrlPreview,
 } from "../../global-redux/CreatePostsSlice.jsx";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   setErrorAndSuccesDialogMessage,
   toggleErrorAndSuccesDialog,
 } from "../../global-redux/GlobalRedux.jsx";
 import { createAdminPostApi } from "../admin-apis/CreateAdminPostApi.jsx";
+import { manageContentSelector } from "../../global-redux/ManageContentSlice.jsx";
 
 export const createAdminPostMutation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const { params } = useSelector(manageContentSelector);
+
+
   const { publishPost } = useSelector(createPostSelector);
   const mutation = useMutation({
     mutationKey: ["createAdminPost"],
     mutationFn: createAdminPostApi,
     onSuccess: (data) => {
-      queryClient.refetchQueries(["adminmanagecontent"]);
+
+      if (data?.status === "pending") {
+        queryClient.setQueryData(["adminmanagecontent", params], (oldData) => {
+          if (oldData) {
+            return {
+              ...oldData,
+              posts: [data, ...oldData.posts],
+            };
+          }
+          return oldData;
+        });
+      }
+
+      if (data?.status === "pending") {
+        queryClient.setQueryData(["GetAdminStatsQuery"], (oldData) => {
+          if (!oldData) {
+            return oldData;
+          }
+          const newData = {
+            ...oldData,
+            dataCount: {
+              ...oldData.dataCount,
+              totalPosts: oldData.dataCount.totalPosts + 1,
+              pending: oldData.dataCount.pending + 1,
+            },
+          };
+
+          return newData;
+        });
+      }
+
       if (publishPost) {
         dispatch(setPublishPost());
         dispatch(

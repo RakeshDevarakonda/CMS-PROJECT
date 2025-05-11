@@ -33,11 +33,11 @@ export const useModeratorProfileDataUpdateMutation = () => {
     },
     onSettled: () => {
       dispatch(submittingData());
-      queryClient.refetchQueries({
-        queryKey: ["fetchmoderatorprofileData"],
-        exact: true,
-      });
-      queryClient.refetchQueries({ queryKey: ["authStatus"], exact: true });
+      // queryClient.refetchQueries({
+      //   queryKey: ["fetchmoderatorprofileData"],
+      //   exact: true,
+      // });
+      // queryClient.refetchQueries({ queryKey: ["authStatus"], exact: true });
     },
   });
 };

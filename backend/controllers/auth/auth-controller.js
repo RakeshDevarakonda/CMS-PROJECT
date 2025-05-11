@@ -57,7 +57,7 @@ export const signupController = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     if (role !== "admin") {
-      await updateAdminAnalytics(null, role);
+      await updateAdminAnalytics(null,null, role);
     }
 
     const newUser = new User({

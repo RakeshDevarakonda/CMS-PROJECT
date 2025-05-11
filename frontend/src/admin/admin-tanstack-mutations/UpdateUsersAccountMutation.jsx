@@ -48,7 +48,6 @@ export const updateUsersAccountMutation = () => {
       dispatch(toggleErrorAndSuccesDialog());
     },
     onSettled: () => {
-      // queryClient.refetchQueries(["fetchAllUsersInAdmin"]);
       dispatch(toggleBackdrop());
     },
   });

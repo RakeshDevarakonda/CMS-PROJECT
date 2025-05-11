@@ -22,14 +22,11 @@ export const updateModeratorStatusMutation = () => {
       const updatedPost = data?.post;
       const totalData = [...contentTotalData];
 
-      console.log(totalData, updatedPost);
 
       if (updatedPost?._id) {
         const updatedIndex = totalData.findIndex(
           (e) => e._id === updatedPost._id
         );
-
-        console.log(updatedIndex);
 
         if (updatedIndex !== -1) {
           totalData[updatedIndex] = updatedPost;

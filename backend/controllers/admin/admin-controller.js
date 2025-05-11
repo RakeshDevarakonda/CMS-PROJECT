@@ -271,7 +271,7 @@ export const changePostStatusByAdmin = async (req, res, next) => {
       await updateUserAnalytics(post.userId, "update", post.status, status);
     }
 
-    await updateAdminAnalytics(post.status, status);
+    await updateAdminAnalytics(post.status, status, "previousToNew");
 
     const adminanalyticsData = await AdminAnalytics.findOne();
 
@@ -380,7 +380,7 @@ export const updateAdminProfile = async (req, res, next) => {
           user.avatar = uploadedImageUrls[0];
         }
       } else {
-        console.log("result.error?.message")
+        console.log("result.error?.message");
         if (result.error?.message?.startsWith("File size too large")) {
           return throwError(400, "File size too large");
         }
@@ -478,6 +478,13 @@ export const updateAdminProfile = async (req, res, next) => {
         email: user.email,
         mobileNumber: user.mobileNumber,
         avatar: user.avatar,
+      },
+      payload: {
+        id: user._id,
+        email: user.email,
+        username: user.name,
+        role: user.role,
+        isActive: user.isActive,
       },
       imageUploadStatus:
         uploadedImageUrls.length > 0 ? "success" : "failed or not uploaded",
@@ -630,6 +637,8 @@ export const getAdminStats = async (req, res, next) => {
 export const getAllVersionsByAdmin = async (req, res, next) => {
   const { id, version, source } = req.query;
 
+  console.log("id", id);
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return throwError(400, "Invalid Post ID");
   }
@@ -762,8 +771,8 @@ export const createPostByAdmin = async (req, res, next) => {
     const deletionResults = await deleteUrl(urls);
 
     if (status === "pending") {
-      await updateAdminAnalytics(null, status);
-      await updateAdminAnalytics(null, "addposts");
+      await updateAdminAnalytics(null, null, "pending");
+      await updateAdminAnalytics(null, null, "addposts");
     }
 
     res.status(201).json({
@@ -793,7 +802,6 @@ export const updateSinglePostByAdmin = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throwError(400, "Invalid Id Format Please try again");
   }
-
   try {
     const post = await Post.findById(id);
 
@@ -845,8 +853,23 @@ export const updateSinglePostByAdmin = async (req, res, next) => {
 
     const deletionResults = updatedUrls ? await deleteUrl(updatedUrls) : [];
 
-    await updateAdminAnalytics(null, "pending");
-    await updateAdminAnalytics(null, "addposts");
+    const oldStatus = post.status;
+    const newStatus = status;
+
+    if (oldStatus === "approved" && newStatus === "pending") {
+      await updateAdminAnalytics(oldStatus, newStatus, "decreaseApprovedCount");
+      await updateAdminAnalytics(oldStatus, newStatus, "pending");
+    }
+
+    if (oldStatus === "approved" && newStatus === "draft") {
+      await updateAdminAnalytics(oldStatus, newStatus, "decreaseApprovedCount");
+      await updateAdminAnalytics(oldStatus, newStatus, "decreaseTotalPosts");
+    }
+
+    if (oldStatus === "draft" && newStatus === "pending") {
+      await updateAdminAnalytics(oldStatus, newStatus, "addposts");
+      await updateAdminAnalytics(oldStatus, newStatus, "pending");
+    }
 
     const postHistory = new PostHistory({
       postId: post._id,
@@ -917,7 +940,9 @@ export const updateSinglePostByAdmin = async (req, res, next) => {
       success: true,
       message: "Post updated successfully",
       deletionResults,
-      data: updated,
+      post: updated,
+      oldStatus,
+      newStatus,
     });
   } catch (error) {
     console.log(error);
@@ -937,6 +962,8 @@ export const deleteSinglePostByAdmin = async (req, res, next) => {
 
     const post = await Post.findById(postId);
 
+    const oldStatus = post.status;
+
     if (version < post.version) {
       return throwError(
         404,
@@ -955,13 +982,15 @@ export const deleteSinglePostByAdmin = async (req, res, next) => {
       );
     }
 
-    post.status = "deleted";
+    await updateAdminAnalytics(post.status, "deleted", "previousToNew");
 
-    await updateAdminAnalytics(post.status, "deleted");
+    post.status = "deleted";
 
     await post.save();
 
-    res.status(200).json({ message: "Post status changed to deleted" });
+    res
+      .status(200)
+      .json({ message: "Post status changed to deleted", post, oldStatus });
   } catch (error) {
     console.log(error);
     next(error);

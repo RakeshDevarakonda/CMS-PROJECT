@@ -1,7 +1,7 @@
 import AdminAnalytics from "../models/admin-analytics.js";
 import { throwError } from "./throw-error.js";
 
-export const updateAdminAnalytics = async (prev, actionType) => {
+export const updateAdminAnalytics = async (prev, newstatus, actionType) => {
   try {
     let analytics = await AdminAnalytics.findOne();
 
@@ -60,6 +60,21 @@ export const updateAdminAnalytics = async (prev, actionType) => {
         }
         break;
 
+      case "decreaseApprovedCount":
+        analytics.approved -= 1;
+
+        break;
+
+      case "decreaseTotalPosts":
+        analytics.totalPosts -= 1;
+
+        break;
+
+      case "previousToNew":
+        analytics[prev] -= 1;
+        analytics[newstatus] += 1;
+
+        break;
       case "draft":
         break;
 

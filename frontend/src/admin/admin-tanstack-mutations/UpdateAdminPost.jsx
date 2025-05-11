@@ -14,25 +14,94 @@ import {
   setUrlPreview,
 } from "../../global-redux/CreatePostsSlice.jsx";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   setErrorAndSuccesDialogMessage,
   toggleErrorAndSuccesDialog,
 } from "../../global-redux/GlobalRedux.jsx";
 import { updateadminPostApi } from "../admin-apis/UpdateAdminPostApi.jsx";
+import { manageContentSelector } from "../../global-redux/ManageContentSlice.jsx";
 
 export const useUpdateAdminPost = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const { params } = useSelector(manageContentSelector);
+
+  const { editid } = useParams();
+
   const { publishPost } = useSelector(createPostSelector);
   const mutation = useMutation({
     mutationKey: ["updateadminPost"],
     mutationFn: updateadminPostApi,
     onSuccess: (data) => {
-      queryClient.refetchQueries(["adminmanagecontent"]);
-      navigate(-1);
+      queryClient.setQueryData(["adminmanagecontent", params], (oldData) => {
+        if (oldData) {
+          const filteredPosts = oldData.posts.filter((e) => e._id !== editid);
+
+          return {
+            ...oldData,
+            posts: [data.post, ...filteredPosts],
+          };
+        }
+        return oldData;
+      });
+
+
+
+      if (data?.oldStatus === "approved" && data?.newStatus === "pending") {
+        queryClient.setQueryData(["GetAdminStatsQuery"], (oldData) => {
+          if (!oldData) {
+            return oldData;
+          }
+          const newData = {
+            ...oldData,
+            dataCount: {
+              ...oldData.dataCount,
+              approved: oldData.dataCount.approved - 1,
+              pending: oldData.dataCount.pending + 1,
+            },
+          };
+
+          return newData;
+        });
+      } else if (
+        data?.oldStatus === "approved" &&
+        data?.newStatus === "draft"
+      ) {
+        queryClient.setQueryData(["GetAdminStatsQuery"], (oldData) => {
+          if (!oldData) {
+            return oldData;
+          }
+          const newData = {
+            ...oldData,
+            dataCount: {
+              ...oldData.dataCount,
+              approved: oldData.dataCount.approved - 1,
+              totalPosts: oldData.dataCount.totalPosts - 1,
+            },
+          };
+
+          return newData;
+        });
+      } else if (data?.oldStatus === "draft" && data?.newStatus === "pending") {
+        queryClient.setQueryData(["GetAdminStatsQuery"], (oldData) => {
+          if (!oldData) {
+            return oldData;
+          }
+          const newData = {
+            ...oldData,
+            dataCount: {
+              ...oldData.dataCount,
+              totalPosts: oldData.dataCount.totalPosts + 1,
+              pending: oldData.dataCount.pending + 1,
+            },
+          };
+
+          return newData;
+        });
+      }
 
       if (publishPost) {
         dispatch(setPublishPost());
@@ -89,6 +158,7 @@ export const useUpdateAdminPost = () => {
     },
     onSettled: () => {
       dispatch(setPostSubmiting());
+      navigate(-1);
     },
   });
   return mutation;

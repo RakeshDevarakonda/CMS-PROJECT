@@ -105,9 +105,9 @@ export const createPostController = async (req, res, next) => {
     const deletionResults = await deleteUrl(parsedUrls);
 
     if (status === "pending") {
-      await updateAdminAnalytics(null, status);
+      await updateAdminAnalytics(null,null, status);
 
-      await updateAdminAnalytics(null, "addposts");
+      await updateAdminAnalytics(null,null, "addposts");
     }
 
     res.status(201).json({
@@ -555,7 +555,7 @@ export const deletePost = async (req, res, next) => {
       );
     }
 
-    await updateAdminAnalytics(post.status, "deleted");
+    await updateAdminAnalytics(post.status,null, "deleted");
 
     await updateUserAnalytics(req.id, "delete", post.status, "deleted");
 
@@ -704,8 +704,8 @@ export const updatePostController = async (req, res, next) => {
       thumbnailType: thumbnailType,
     };
 
-    await updateAdminAnalytics(null, "pending");
-    await updateAdminAnalytics(null, "addposts");
+    await updateAdminAnalytics(null,null, "pending");
+    await updateAdminAnalytics(null,null, "addposts");
 
     await updateUserAnalytics(req.id, "create", null, status);
 

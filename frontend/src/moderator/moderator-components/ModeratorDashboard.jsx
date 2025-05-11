@@ -150,7 +150,7 @@ const ModeratorDashboard = () => {
 
   useEffect(() => {
     if (isSuccess && statsData) {
-      console.log(statsData);
+
       const cleanedDataCount = { ...statsData?.dataCount };
 
       dispatch(setDataCount(cleanedDataCount));

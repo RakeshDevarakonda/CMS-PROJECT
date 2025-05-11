@@ -3,9 +3,6 @@ import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export async function createAdminPostApi(FormDataSend) {
-  for (let pair of FormDataSend.entries()) {
-    console.log(`${pair[0]}:`, pair[1]);
-  }
 
   try {
     const response = await axios.post(

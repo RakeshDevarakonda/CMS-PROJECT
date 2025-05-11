@@ -24,39 +24,29 @@ export const updateAdminStatusMutation = () => {
     mutationFn: updateAdminStatusApi,
     onSuccess: (data) => {
       queryClient.setQueryData(["adminmanagecontent", params], (oldData) => {
-        const updatedPost = data?.post;
-        const totalData = [...contentTotalData];
+        if (!oldData) {
+          return oldData;
+        }
 
-        console.log(totalData, updatedPost);
+        const findIndex = oldData.posts.findIndex(
+          (e) => e._id === data.post._id
+        );
 
-        if (updatedPost?._id) {
-          const updatedIndex = totalData.findIndex(
-            (e) => e._id === updatedPost._id
-          );
+        if (findIndex !== -1) {
+          const updatedPosts = [...oldData.posts];
 
-          console.log(updatedIndex);
+          updatedPosts[findIndex] = data.post;
 
-          if (updatedIndex !== -1) {
-            totalData[updatedIndex] = updatedPost;
-
-            const newPosts = {
-              ...oldData,
-              posts: totalData,
-            };
-
-            console.log(newPosts);
-
-            return newPosts;
-          }
+          return {
+            ...oldData,
+            posts: updatedPosts,
+          };
         }
         return oldData;
       });
 
       queryClient.setQueryData(["GetAdminStatsQuery"], (oldData) => {
-        console.log("Old GetAdminStatsQuery data:", oldData);
-
         if (!oldData) {
-          console.warn("No existing GetAdminStatsQuery data found");
           return oldData;
         }
 
@@ -65,7 +55,6 @@ export const updateAdminStatusMutation = () => {
           dataCount: data?.dataCount,
         };
 
-        console.log("New GetAdminStatsQuery data:", newData);
         return newData;
       });
 

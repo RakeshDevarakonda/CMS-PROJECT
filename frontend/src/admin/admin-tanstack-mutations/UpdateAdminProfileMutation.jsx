@@ -20,6 +20,30 @@ export const useAdminProfileDataUpdateMutation = () => {
     mutationFn: updateAdminProfileDataApi,
     onSuccess: (data) => {
       dispatch(toggleEditing());
+
+      queryClient.setQueryData(["fetchadminprofileData"], (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        const updatedData = {
+          ...oldData,
+
+          ...data.user,
+        };
+        return updatedData;
+      });
+
+      queryClient.setQueryData(["authStatus"], (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        const updatedData = {
+          ...oldData,
+
+          ...data.payload,
+        };
+        return updatedData;
+      });
     },
     onError: (error) => {
       dispatch(toggleErrorAndSuccesDialog());
@@ -33,9 +57,6 @@ export const useAdminProfileDataUpdateMutation = () => {
     },
     onSettled: () => {
       dispatch(submittingData());
-      queryClient.refetchQueries({ queryKey: ["fetchadminprofileData"], exact: true });
-      queryClient.refetchQueries({ queryKey: ["authStatus"], exact: true });
-
     },
   });
 };

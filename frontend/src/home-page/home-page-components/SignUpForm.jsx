@@ -141,7 +141,7 @@ const SignUpForm = () => {
 
       const update = { role: selectedRole };
 
-      console.log(signUpFormData);
+ 
 
       const updatedData = { ...signUpFormData, ...update };
       signUpMutation.mutate(updatedData);

@@ -35,6 +35,7 @@ import {
   setParams,
   setSelectedFilterType,
   setVersionList,
+  setVersionposts,
 } from "../../global-redux/ManageContentSlice.jsx";
 import { useGetModeratorManageContentQuery } from "../../moderator/moderator-tanstack-queries/ModeratorManageContentQuery.jsx";
 import ManageContentOnlyTableSkeleton from "../../skeletons/ManageContentOnlyTableSkeleton.jsx";
@@ -354,6 +355,8 @@ const ManageContent = ({ statusfilter, userDataType }) => {
       updatedContentTotalData[changeindex] = updatedContent;
 
       dispatch(setContentTotalData(updatedContentTotalData));
+
+      dispatch(setVersionposts())
     }
   }, [singleversiondata, refreshKey, versionList, versionposts]);
 

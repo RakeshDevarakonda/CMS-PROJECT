@@ -15,7 +15,7 @@ export const deleteAdminSinglePostMutation = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
-  const { contentTotalData, contentDeleteId } = useSelector(
+  const { contentTotalData, contentDeleteId, params } = useSelector(
     manageContentSelector
   );
 
@@ -24,11 +24,35 @@ export const deleteAdminSinglePostMutation = () => {
     mutationFn: deleteAdminSingleApi,
     retry: 1,
     onSuccess: (data) => {
-      const deletedData = [...contentTotalData];
+      queryClient.setQueryData(["adminmanagecontent", params], (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        const updatedData = oldData?.posts?.filter(
+          (item) => item._id !== data.post._id
+        );
+        return {
+          ...oldData,
+          posts: updatedData,
+        };
+      });
 
-      const updatedData = deletedData.filter((e) => e._id !== contentDeleteId);
+      queryClient.setQueryData(["GetAdminStatsQuery"], (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        const oldStatus = data.oldStatus;
+    
 
-      dispatch(setContentTotalData(updatedData));
+        return {
+          ...oldData,
+          dataCount: {
+            ...oldData.dataCount,
+            deleted: oldData.dataCount.deleted + 1,
+            [oldStatus]: oldData.dataCount[oldStatus] - 1,
+          },
+        };
+      });
     },
     onError: (error) => {
       console.error("Delete error:", error);
@@ -46,7 +70,6 @@ export const deleteAdminSinglePostMutation = () => {
 
     onSettled: () => {
       dispatch(toggleDeleting());
-   
     },
   });
 };

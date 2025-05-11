@@ -11,7 +11,7 @@ export const getAllArticlesApi = async (currentPage, allarticles) => {
       }
     );
 
-    console.log(response?.data);
+
     return response?.data;
   } catch (error) {
     console.log(error);

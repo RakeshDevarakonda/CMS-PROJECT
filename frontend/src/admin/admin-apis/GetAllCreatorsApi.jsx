@@ -3,13 +3,13 @@ import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export async function fetchAllUsersInAdminApi(manageuser, finalSearchUsername) {
-  console.log(manageuser);
+
   try {
     const response = await axios.get(`${API_BASE_URL}/api/admin/getallusers`, {
       params: { manageuser, finalSearchUsername },
       withCredentials: true,
     });
-    console.log(response.data)
+   
     return response.data;
   } catch (error) {
     console.log(error);

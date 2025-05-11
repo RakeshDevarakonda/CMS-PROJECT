@@ -271,7 +271,7 @@ export const changePostStatus = async (req, res, next) => {
       );
     }
 
-    await updateAdminAnalytics(post.status, status);
+    await updateAdminAnalytics(post.status,null, status);
 
     const existingModIndex = post.moderatedBy.findIndex(
       (mod) =>
