@@ -2,6 +2,10 @@
 
 A scalable Content Management System (CMS) built with **React** and **Node.js** featuring role-based access (Creator, Admin, Moderator), JWT authentication, and various optimizations for performance and security.
 
+
+LiveUrl:-
+https://cms-project-qghq.onrender.com
+
 ## Technologies Used
 
 - **Frontend**: React, React Query
@@ -9,8 +13,7 @@ A scalable Content Management System (CMS) built with **React** and **Node.js** 
 - **Authentication**: JWT (JSON Web Tokens)
 - **Caching**: Frontend Caching, React Query
 - **Security**: Helmet, RateLimit, Data Encryption
-- **Database**: (Add your database here, e.g., MongoDB, MySQL)
-
+- **Database**: monngodb
 ## Features
 
 - **Role-Based Access Control**: Supports Creator, Admin, and Moderator roles for managing content.
