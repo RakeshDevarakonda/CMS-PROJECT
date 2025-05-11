@@ -4,7 +4,11 @@ A scalable Content Management System (CMS) built with **React** and **Node.js** 
 
 
 LiveUrl:-
+
+Note:- it may take 1-2 minutes to load initially.....please wait
 https://cms-project-qghq.onrender.com
+
+
 
 ## Technologies Used
 
