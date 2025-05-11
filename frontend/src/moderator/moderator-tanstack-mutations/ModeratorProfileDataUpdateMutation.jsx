@@ -20,6 +20,30 @@ export const useModeratorProfileDataUpdateMutation = () => {
     mutationFn: updateModeratorProfileDataApi,
     onSuccess: (data) => {
       dispatch(toggleEditing());
+
+      queryClient.setQueryData(["fetchmoderatorprofileData"], (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        const updatedData = {
+          ...oldData,
+
+          ...data.user,
+        };
+        return updatedData;
+      });
+
+      queryClient.setQueryData(["authStatus"], (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        const updatedData = {
+          ...oldData,
+
+          ...data.payload,
+        };
+        return updatedData;
+      });
     },
     onError: (error) => {
       dispatch(toggleErrorAndSuccesDialog());

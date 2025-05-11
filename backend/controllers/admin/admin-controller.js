@@ -285,11 +285,30 @@ export const changePostStatusByAdmin = async (req, res, next) => {
       rejected: adminanalyticsData.rejected,
     };
 
+
+
+
+    
+    const moderatorCount = post.moderatedBy.filter(
+      (mod) => mod.role === "moderator"
+    ).length;
+
+    const moderator = post.moderatedBy.find((mod) => mod.role === "moderator");
+
+    console.log(moderatorCount,moderator);
+
+    if (moderatorCount === 1 && moderator) {
+      await updateModeratorAnalytics(
+        moderator.user,
+        post.status,
+        status,
+        "adminreupdate"
+      );
+    }
+    
+
     post.status = status;
 
-    const existingModerationIndex = post.moderatedBy.findIndex(
-      (mod) => mod.user.toString() === req.id.toString() && mod.role === "admin"
-    );
 
     const moderationEntry = {
       user: req.id,
@@ -298,6 +317,10 @@ export const changePostStatusByAdmin = async (req, res, next) => {
       role: "admin",
       reason: reason || null,
     };
+
+    const existingModerationIndex = post.moderatedBy.findIndex(
+      (mod) => mod.user.toString() === req.id.toString()
+    );
 
     if (existingModerationIndex !== -1) {
       post.moderatedBy[existingModerationIndex] = moderationEntry;

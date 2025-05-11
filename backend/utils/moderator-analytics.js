@@ -9,8 +9,9 @@ export const updateModeratorAnalytics = async (
   isAlreadyUpdated
 ) => {
   try {
-    let analytics = await ModeratortAnalytics.findOne({ userId });
+    console.log(userId, prevStatus, newStatus, actionType, isAlreadyUpdated);
 
+    let analytics = await ModeratortAnalytics.findOne({ userId });
 
     if (!analytics) {
       analytics = new ModeratortAnalytics({
@@ -47,11 +48,11 @@ export const updateModeratorAnalytics = async (
       case "adminreupdate":
         if (prevStatus === "approved" && newStatus === "rejected") {
           analytics.approvedCount -= 1;
-          analytics.rejectedCount += 1;
+
           analytics.adminrechangedCount += 1;
         } else if (prevStatus === "rejected" && newStatus === "approved") {
           analytics.rejectedCount -= 1;
-          analytics.approvedCount += 1;
+
           analytics.adminrechangedCount += 1;
         }
         break;

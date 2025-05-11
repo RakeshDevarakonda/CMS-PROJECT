@@ -16,8 +16,6 @@ export const getModeratorStatsController = async (req, res, next) => {
     let analytics = await ModeratortAnalytics.findOne({ userId });
     let pendingPosts = await Post.countDocuments({ status: "pending" });
 
-
-
     if (!analytics) {
       analytics = new ModeratortAnalytics({
         userId,
@@ -37,7 +35,6 @@ export const getModeratorStatsController = async (req, res, next) => {
       pending: pendingPosts,
     };
 
-    // Last 5 days stats for moderator
     const fiveDaysAgo = new Date();
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 4);
 
@@ -117,16 +114,35 @@ export const getallmoderatorposts = async (req, res, next) => {
     const skip = page * limit;
     const statusFilter = contentStatusFilter?.toLowerCase();
 
+    // Base queries (without status filter)
     let postQuery = { status: { $nin: ["draft", "deleted"] } };
     let postHistoryQuery = {
       status: { $nin: ["draft", "pending", "deleted"] },
     };
 
+    // Apply filters based on status
     if (statusFilter === "pending") {
-      postQuery.status = statusFilter;
-    }
-
-    if (["approved", "rejected"].includes(statusFilter)) {
+      // Show ALL pending posts (no moderator filter)
+      postQuery.status = "pending";
+    } else if (statusFilter === "all") {
+      // For "all":
+      // - Show ALL pending posts (no moderator filter)
+      // - For approved/rejected, only show if moderated by current user
+      postQuery = {
+        $or: [
+          { status: "pending" }, // All pending posts
+          {
+            status: { $in: ["approved", "rejected"] },
+            moderatedBy: { $elemMatch: { user: req.id } },
+          },
+        ],
+      };
+      postHistoryQuery = {
+        status: { $in: ["approved", "rejected"] },
+        moderatedBy: { $elemMatch: { user: req.id } },
+      };
+    } else if (["approved", "rejected"].includes(statusFilter)) {
+      // Only show approved/rejected posts moderated by current user
       postQuery.status = statusFilter;
       postQuery.moderatedBy = { $elemMatch: { user: req.id } };
 
@@ -134,6 +150,13 @@ export const getallmoderatorposts = async (req, res, next) => {
       postHistoryQuery.moderatedBy = { $elemMatch: { user: req.id } };
     }
 
+    console.log("Post Query:", JSON.stringify(postQuery, null, 2));
+    console.log(
+      "PostHistory Query:",
+      JSON.stringify(postHistoryQuery, null, 2)
+    );
+
+    // Date filtering (unchanged)
     if (finalStartDate && finalEndDate) {
       const startDate = new Date(finalStartDate + "T00:00:00+05:30");
       const endDate = new Date(finalEndDate + "T23:59:59+05:30");
@@ -150,6 +173,7 @@ export const getallmoderatorposts = async (req, res, next) => {
       postHistoryQuery.updatedAt = { $gte: startDate, $lte: endDate };
     }
 
+    // Fetch posts (unchanged)
     const postsFromMain = await Post.find(postQuery)
       .sort({ version: -1 })
       .populate("userId", "name role")
@@ -162,6 +186,7 @@ export const getallmoderatorposts = async (req, res, next) => {
 
     let posts = [...postsFromMain, ...postsFromHistory];
 
+    // Search filter (unchanged)
     if (finalSearchterm) {
       const searchTerm = finalSearchterm.trim().toLowerCase();
       posts = posts.filter((post) =>
@@ -169,24 +194,21 @@ export const getallmoderatorposts = async (req, res, next) => {
       );
     }
 
+    // Sorting (unchanged)
     posts = posts.sort((a, b) => {
       const dateA = new Date(a[sortBy]).getTime();
       const dateB = new Date(b[sortBy]).getTime();
       return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
     });
 
+    // Pagination (unchanged)
     const paginatedPosts = posts.slice(skip, skip + limit);
-
     const totalCount = posts.length;
-
-    const statusSummary = {
-      totalCount,
-    };
 
     res.status(200).json({
       totalPages: Math.ceil(posts.length / limit),
       posts: paginatedPosts,
-      statusSummary,
+      statusSummary: { totalCount },
     });
   } catch (error) {
     console.log(error);
@@ -249,7 +271,12 @@ export const changePostStatus = async (req, res, next) => {
       );
     }
 
-    await updateUserAnalytics(post.userId, "update", post.status, status);
+    await updateUserAnalytics(
+      post.userId,
+      "prevToNewStatus",
+      post.status,
+      status
+    );
 
     if (
       post.moderatedBy.some((mod) => mod.user.toString() === req.id.toString())
@@ -271,7 +298,7 @@ export const changePostStatus = async (req, res, next) => {
       );
     }
 
-    await updateAdminAnalytics(post.status,null, status);
+    await updateAdminAnalytics(post.status, status, "previousToNew");
 
     const existingModIndex = post.moderatedBy.findIndex(
       (mod) =>
@@ -300,9 +327,24 @@ export const changePostStatus = async (req, res, next) => {
 
     await post.populate("moderatedBy.user", "name email role");
 
+    const moduserId = req.id;
+
+    let analytics = await ModeratortAnalytics.findOne({ userId: moduserId });
+
+    let pendingPosts = await Post.countDocuments({ status: "pending" });
+
+    const statusSummary = {
+      total: analytics.totalPosts,
+      rejected: analytics.rejectedCount,
+      adminrechanged: analytics.adminrechangedCount,
+      approved: analytics.approvedCount,
+      pending: pendingPosts,
+    };
+
     res.status(200).json({
       message: "Post status updated successfully.",
       post,
+      dataCount: statusSummary,
     });
   } catch (error) {
     console.log(error);
@@ -445,6 +487,13 @@ export const updateModeratorProfileDataController = async (req, res, next) => {
         email: user.email,
         mobileNumber: user.mobileNumber,
         avatar: user.avatar,
+      },
+      payload: {
+        id: user._id,
+        email: user.email,
+        username: user.name,
+        role: user.role,
+        isActive: user.isActive,
       },
       imageUploadStatus:
         uploadedImageUrls.length > 0 ? "success" : "failed or not uploaded",

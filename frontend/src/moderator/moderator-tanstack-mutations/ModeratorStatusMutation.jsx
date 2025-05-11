@@ -13,28 +13,54 @@ import {
 export const updateModeratorStatusMutation = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const { contentTotalData } = useSelector(manageContentSelector);
+  const { contentTotalData, params } = useSelector(manageContentSelector);
 
   return useMutation({
     mutationKey: ["updatemoderatorstatusmutaion"],
     mutationFn: updateModeratorStatusApi,
     onSuccess: (data) => {
-      const updatedPost = data?.post;
-      const totalData = [...contentTotalData];
+      console.log(data)
+      queryClient.setQueryData(
+        ["moderatormanagecontent", params],
+        (oldData) => {
+          if (!oldData) {
+            return oldData;
+          }
 
+          const findIndex = oldData.posts.findIndex(
+            (e) => e._id === data.post._id
+          );
 
-      if (updatedPost?._id) {
-        const updatedIndex = totalData.findIndex(
-          (e) => e._id === updatedPost._id
-        );
+          if (findIndex !== -1) {
+            const updatedPosts = [...oldData.posts];
 
-        if (updatedIndex !== -1) {
-          totalData[updatedIndex] = updatedPost;
-          dispatch(setContentTotalData(totalData));
+            updatedPosts[findIndex] = data.post;
+
+            return {
+              ...oldData,
+              posts: updatedPosts,
+            };
+          }
+          return oldData;
         }
-      }
+      );
 
+      queryClient.setQueryData(
+        ["GetModeratorStatsQuery"],
+        (oldData) => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            dataCount: data?.dataCount,
+          };
+        }
+      );
     },
+
+
     onError: (error) => {
       dispatch(
         setErrorAndSuccesDialogMessage({
@@ -50,7 +76,6 @@ export const updateModeratorStatusMutation = () => {
       });
     },
     onSettled: () => {
-
       dispatch(toggleBackdrop());
     },
   });
