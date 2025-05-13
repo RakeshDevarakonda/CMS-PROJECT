@@ -11,7 +11,7 @@ const initialState = {
   contentCustomStartDate: "",
   contentCustomEndDate: "",
   contentOpenDateDialog: false,
-  contentShowFilter: true,
+  contentShowFilter: false,
   contentSelectedOpportunity: null,
   contentPostDetailsDialog: false,
   contentTotalData: [],
