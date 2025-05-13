@@ -10,7 +10,7 @@ homePageRouter.get("/getallarticles", async (req, res, next) => {
   try {
     const { currentPage, allarticles } = req.query;
 
-    const limit = 9;
+    const limit = 3;
     const skip = limit * (currentPage - 1);
 
     const totalCount = await Post.countDocuments({
@@ -60,16 +60,10 @@ homePageRouter.get("/getsinglepost/:id", async (req, res, next) => {
       throwError(400, "Invalid Id Format Please try again");
     }
 
-   
-
     const post = await Post.findById({
       _id: req.params.id,
       status: { $nin: ["pending", "rejected", "draft", "deleted"] }, // Exclude posts with any of these statuses
     }).populate("userId", "name avatar"); // Populate userId with 'name' and 'avatar'
-
-
- 
-
 
     post.viewsCount += 1;
     await post.save();
@@ -225,7 +219,7 @@ homePageRouter.post("/comment", async (req, res, next) => {
       comment: newComment,
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     next(err);
   }
 });

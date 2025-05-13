@@ -401,7 +401,6 @@ const ArticlePage = () => {
       {/* Article Content */}
       <Paper
         sx={{
-          p: { xs: 2, md: 4 },
           mb: 4,
           bgcolor: themeColors.paper,
           borderRadius: 2,

@@ -74,7 +74,7 @@ function LatestArticles({ allarticles }) {
     return (
       <LatestArticlesSkeleton
         allarticles={allarticles}
-        count={allarticles ? "9" : "3"}
+        count={allarticles ? "3" : "3"}
       />
     );
   }
@@ -426,6 +426,7 @@ function LatestArticles({ allarticles }) {
             <Box sx={{ display: "flex", justifyContent: "center", my: 5 }}>
               <Pagination
                 size="large"
+                page={currentPage}
                 onChange={handlePageChange}
                 count={totalPages}
                 variant="outlined"

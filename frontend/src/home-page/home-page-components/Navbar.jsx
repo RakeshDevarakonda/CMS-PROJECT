@@ -352,7 +352,7 @@ export default function Navbar() {
               marginRight: "10px",
             }}
           >
-            M
+            {userDetails?.username?.charAt(0).toUpperCase()}
           </Avatar>
           <Logo currentcolors={currentColors}>CMS</Logo>
         </Box>
@@ -496,7 +496,7 @@ export default function Navbar() {
                     marginRight: "10px",
                   }}
                 >
-                  M
+                      {userDetails?.username?.charAt(0).toUpperCase()}
                 </Avatar>
                 <Logo currentcolors={currentColors}>CMS</Logo>
               </Link>
@@ -584,7 +584,7 @@ export default function Navbar() {
                     fontWeight: 600,
                   }}
                 >
-                  JD
+                           {userDetails?.username?.charAt(0).toUpperCase()}
                 </Avatar>
               </IconButton>
             </Tooltip>

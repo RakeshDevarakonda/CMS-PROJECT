@@ -130,6 +130,7 @@ function LatestArticlesSkeleton({ allarticles, count }) {
                       borderColor: themeColors.divider,
                       backgroundColor: themeColors.paper,
                       backdropFilter: "blur(10px)",
+                      width:"350px"
                     }}
                   >
                     <Box
