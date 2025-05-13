@@ -60,10 +60,16 @@ homePageRouter.get("/getsinglepost/:id", async (req, res, next) => {
       throwError(400, "Invalid Id Format Please try again");
     }
 
-    const post = await Post.findOne({
+   
+
+    const post = await Post.findById({
       _id: req.params.id,
       status: { $nin: ["pending", "rejected", "draft", "deleted"] }, // Exclude posts with any of these statuses
     }).populate("userId", "name avatar"); // Populate userId with 'name' and 'avatar'
+
+
+ 
+
 
     post.viewsCount += 1;
     await post.save();
