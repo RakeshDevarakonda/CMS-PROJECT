@@ -150,11 +150,7 @@ export const getallmoderatorposts = async (req, res, next) => {
       postHistoryQuery.moderatedBy = { $elemMatch: { user: req.id } };
     }
 
-    console.log("Post Query:", JSON.stringify(postQuery, null, 2));
-    console.log(
-      "PostHistory Query:",
-      JSON.stringify(postHistoryQuery, null, 2)
-    );
+
 
     // Date filtering (unchanged)
     if (finalStartDate && finalEndDate) {
@@ -229,6 +225,7 @@ export const changePostStatus = async (req, res, next) => {
     }
 
     const post = await Post.findById(postId).populate("userId", "name role");
+
     if (!post) {
       throwError(404, "Post not found.");
     }
@@ -272,7 +269,7 @@ export const changePostStatus = async (req, res, next) => {
     }
 
     await updateUserAnalytics(
-      post.userId,
+      post.userId._id.toString(),
       "prevToNewStatus",
       post.status,
       status

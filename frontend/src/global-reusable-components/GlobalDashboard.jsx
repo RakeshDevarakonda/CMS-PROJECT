@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import DOMPurify from "dompurify";
 import {
   PieChart,
   Pie,
@@ -24,18 +25,18 @@ import { creatorDashboardSelector } from "../global-redux/CreatorDashBoardslice.
 import { adminDashboardSelector } from "../global-redux/AdminDashboardSlice.jsx";
 import { moderatorDashboardSelector } from "./../global-redux/ModeratorDashboardSlice";
 import { useQueryClient } from "@tanstack/react-query";
+import { Dashboard, Refresh } from "@mui/icons-material";
+import { Box, IconButton, Typography } from "@mui/material";
 
 // Status colors and configuration
 
-const GlobalDashboard = ({ getStatusConfig }) => {
+const GlobalDashboard = ({ getStatusConfig,refetch }) => {
   const { darkMode, userDetails } = useSelector(globalReduxSelector);
   const colorMode = darkMode ? "dark" : "light";
   const theme = colors[colorMode];
   const statusConfig = getStatusConfig();
 
-  const queryClient= useQueryClient();
-
-
+  const queryClient = useQueryClient();
 
   const {
     dataCount: creatordatacount,
@@ -296,14 +297,13 @@ const GlobalDashboard = ({ getStatusConfig }) => {
     <>
       <div style={styles.container}>
         {/* Header */}
-        <div style={styles.header}>
-          <h1 style={styles.pageTitle}>Creator Dashboard</h1>
-        </div>
+
+       
 
         {/* Status Cards */}
 
         {userDetails?.role == "creator" && dataCount && (
-          <DashboardStats dataCount={dataCount} />
+          <DashboardStats refetch={refetch} dataCount={dataCount} />
         )}
 
         {/* Weekly Trend */}
@@ -513,32 +513,49 @@ const GlobalDashboard = ({ getStatusConfig }) => {
                     </thead>
                     <tbody>
                       {articles.length > 0 ? (
-                        articles.map((article) => (
-                          <tr key={article._id} style={styles.tableRow}>
-                            <td style={styles.tableCell}>{article.title}</td>
-                            <td style={styles.tableCell}>
-                              {article.content
-                                ? `${article.content.slice(0, 10)}...`
-                                : ""}
-                            </td>
-                            <td style={styles.tableCell}>
-                              {new Date(article.updatedAt).toLocaleDateString(
-                                "en-IN",
-                                {
-                                  day: "numeric",
-                                  month: "short",
-                                  year: "numeric",
-                                }
-                              )}
-                            </td>
-                            <td style={styles.tableCell}>
-                              {getStatusChip(
-                                article.status.charAt(0).toUpperCase() +
-                                  article.status.slice(1)
-                              )}
-                            </td>
-                          </tr>
-                        ))
+                        articles.map((article) => {
+                          const sanitizedContent = DOMPurify.sanitize(
+                            article?.content || ""
+                          );
+                          const plainText =
+                            new DOMParser().parseFromString(
+                              sanitizedContent,
+                              "text/html"
+                            ).body.textContent || "";
+
+                          const truncatedContent =
+                            plainText.length > 200
+                              ? plainText.slice(0, 200) + "..."
+                              : plainText;
+
+                          return (
+                            <tr key={article._id} style={styles.tableRow}>
+                              <td style={styles.tableCell}>{article.title}</td>
+                              <td
+                                style={styles.tableCell}
+                                dangerouslySetInnerHTML={{
+                                  __html: truncatedContent,
+                                }}
+                              ></td>
+                              <td style={styles.tableCell}>
+                                {new Date(article.updatedAt).toLocaleDateString(
+                                  "en-IN",
+                                  {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                  }
+                                )}
+                              </td>
+                              <td style={styles.tableCell}>
+                                {getStatusChip(
+                                  article.status.charAt(0).toUpperCase() +
+                                    article.status.slice(1)
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })
                       ) : (
                         <tr>
                           <td

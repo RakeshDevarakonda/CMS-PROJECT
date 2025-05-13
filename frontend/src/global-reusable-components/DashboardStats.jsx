@@ -6,6 +6,7 @@ import {
   Typography,
   Tooltip,
   LinearProgress,
+  IconButton,
 } from "@mui/material";
 import {
   InsertChart,
@@ -14,12 +15,14 @@ import {
   Cancel,
   HourglassEmpty,
   DeleteForever,
+  Refresh,
+  Dashboard,
 } from "@mui/icons-material";
 import { globalReduxSelector } from "../global-redux/GlobalRedux.jsx";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const DashboardStats = ({ dataCount }) => {
+const DashboardStats = ({ dataCount,refetch }) => {
   const themeColors = {
     light: {
       background: "#f5f7fa",
@@ -42,7 +45,7 @@ const DashboardStats = ({ dataCount }) => {
   const isDark = colorMode === "dark";
 
   const stats = useMemo(() => {
-    const total = dataCount?.totalCount || 0;
+    const total = dataCount?.totalPosts || 0;
 
     const draft = dataCount?.draft || 0;
     const pending = dataCount?.pending || 0;
@@ -154,12 +157,75 @@ const DashboardStats = ({ dataCount }) => {
     },
   };
 
+  const theme = darkMode ? "dark" : "light";
+
   if (!stats.length) {
     return <Box sx={styles.container}>No Posts data available</Box>;
   }
 
   return (
     <Box sx={styles.container}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 4,
+          }}
+        >
+          <Dashboard
+            sx={{
+              color: "#6366f1",
+              fontSize: "2rem",
+              mr: 2,
+              p: 1,
+              backgroundColor: darkMode ? "rgba(99, 102, 241, 0.1)" : "#e0e7ff",
+              borderRadius: "12px",
+            }}
+          />
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 700,
+              color: theme.textPrimary,
+              fontSize: { xs: "1.5rem", md: "1.75rem" },
+            }}
+          >
+            Creator DashBoard
+          </Typography>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Tooltip
+            arrow
+            title="Refresh"
+            placement="top"
+            componentsProps={{
+              tooltip: {
+                sx: {
+                  bgcolor: darkMode ? "#1e1e1e" : "#ffffff",
+                  color: currentTheme.textPrimary,
+                  boxShadow:
+                    theme === "light"
+                      ? "0 4px 20px rgba(0,0,0,0.05)"
+                      : "0 4px 20px rgba(0,0,0,0.2)",
+                  "& .MuiTooltip-arrow": {
+                    color: darkMode ? "#1e1e1e" : "#ffffff",
+                  },
+                },
+              },
+            }}
+          >
+            <IconButton
+              onClick={() => {refetch()}}
+              aria-label="filter list"
+              sx={{ color: currentTheme.textPrimary, mb: 4 }}
+            >
+              <Refresh sx={{ fontSize: "1.5rem" }} />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+
       <Box sx={styles.cardsContainer}>
         {stats.map((item) => (
           <StatCard

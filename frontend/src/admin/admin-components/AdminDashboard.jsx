@@ -9,6 +9,8 @@ import {
   Avatar,
   useTheme as useMuiTheme,
   useMediaQuery,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 import {
   PieChart,
@@ -24,8 +26,10 @@ import GlobalDashboard from "../../global-reusable-components/GlobalDashboard";
 import {
   Block,
   BusinessCenter,
+  Dashboard,
   HourglassEmpty,
   InsertChart,
+  Refresh,
 } from "@mui/icons-material";
 import {
   setStatusCounts,
@@ -127,6 +131,8 @@ const AdminDashboard = () => {
     data: statsData,
     isLoading,
     isSuccess,
+    refetch,
+    isRefetching,
     isError,
   } = useGetAdminStatsQuery();
 
@@ -174,7 +180,7 @@ const AdminDashboard = () => {
     dispatch(setTrendData(trend));
 
     dispatch(setStatusCounts(statusData));
-  }, [statsData,dataCount, isSuccess]);
+  }, [statsData, dataCount, isSuccess]);
 
   const stats = useMemo(() => {
     const totalPosts = dataCount?.totalPosts || 0;
@@ -246,7 +252,7 @@ const AdminDashboard = () => {
     ];
   }, [dataCount]);
 
-  if (isLoading) {
+  if (isLoading || isRefetching) {
     return (
       <>
         <AdminDashboardSkeleton
@@ -254,7 +260,6 @@ const AdminDashboard = () => {
           isXs={isXs}
           currentTheme={currentTheme}
         />
-        
         <GlobalDashboardSkeleton />;
       </>
     );
@@ -262,22 +267,70 @@ const AdminDashboard = () => {
   return (
     <>
       <Box sx={{ backgroundColor: currentTheme.background, p: 4 }}>
-        <Card
-          sx={{ backgroundColor: currentTheme.cardBackground, mb: 3, p: 3 }}
-        >
-          <Box display="flex" alignItems="center" gap={2} mb={1}>
-            <BarChart3 color="#6366F1" size={24} />
-            <Typography variant="h6" sx={{ color: currentTheme.textPrimary }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 4,
+            }}
+          >
+            <Dashboard
+              sx={{
+                color: "#6366f1",
+                fontSize: "2rem",
+                mr: 2,
+                p: 1,
+                backgroundColor: darkMode
+                  ? "rgba(99, 102, 241, 0.1)"
+                  : "#e0e7ff",
+                borderRadius: "12px",
+              }}
+            />
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                color: currentTheme.textPrimary,
+                fontSize: { xs: "1.5rem", md: "1.75rem" },
+              }}
+            >
               Admin DashBoard
             </Typography>
           </Box>
-          <Typography
-            variant="body2"
-            sx={{ color: currentTheme.textSecondary }}
-          >
-            Analytics
-          </Typography>
-        </Card>
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Tooltip
+              arrow
+              title="Refresh"
+              placement="top"
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    bgcolor: darkMode ? "#1e1e1e" : "#ffffff",
+                    color: currentTheme.textPrimary,
+                    boxShadow:
+                      theme === "light"
+                        ? "0 4px 20px rgba(0,0,0,0.05)"
+                        : "0 4px 20px rgba(0,0,0,0.2)",
+                    "& .MuiTooltip-arrow": {
+                      color: darkMode ? "#1e1e1e" : "#ffffff",
+                    },
+                  },
+                },
+              }}
+            >
+              <IconButton
+                onClick={() => {
+                  refetch();
+                }}
+                aria-label="filter list"
+                sx={{ color: currentTheme.textPrimary, mb: 4 }}
+              >
+                <Refresh sx={{ fontSize: "1.5rem" }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
 
         <Card
           sx={{

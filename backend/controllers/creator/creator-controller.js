@@ -101,13 +101,14 @@ export const createPostController = async (req, res, next) => {
 
     await updateUserAnalytics(req.id, "create", null, status);
 
+    
+
     const savedPost = await newPost.save();
     const deletionResults = await deleteUrl(parsedUrls);
 
     if (status === "pending") {
-      await updateAdminAnalytics(null,null, status);
-
-      await updateAdminAnalytics(null,null, "addposts");
+      await updateAdminAnalytics(null, null, "pending");
+      await updateAdminAnalytics(null, null, "addposts");
     }
 
     res.status(201).json({
@@ -214,7 +215,7 @@ export const getAllPostsController = async (req, res, next) => {
       pending: userAnalytics?.pendingCount || 0,
       rejected: userAnalytics?.rejectedCount || 0,
       deleted: userAnalytics?.deletedCount || 0,
-      totalCount: posts.length,
+      totalPosts: posts.length,
     };
 
     res.status(200).json({
@@ -265,7 +266,7 @@ export const getCreatorStatsController = async (req, res, next) => {
       pending: userAnalytics.pendingCount,
       rejected: userAnalytics.rejectedCount,
       deleted: userAnalytics.deletedCount,
-      totalCount: userAnalytics.totalPosts,
+      totalPosts: userAnalytics.totalPosts,
     };
 
     const fiveDaysAgo = new Date();
@@ -468,6 +469,13 @@ export const updateProfileDataController = async (req, res, next) => {
         mobileNumber: user.mobileNumber,
         avatar: user.avatar,
       },
+      payload: {
+        id: user._id,
+        email: user.email,
+        username: user.name,
+        role: user.role,
+        isActive: user.isActive,
+      },
       imageUploadStatus:
         uploadedImageUrls.length > 0 ? "success" : "failed or not uploaded",
     });
@@ -537,6 +545,8 @@ export const deletePost = async (req, res, next) => {
 
     const post = await Post.findById(postId);
 
+    const oldStatus = post.status;
+
     if (version < post.version) {
       return throwError(
         404,
@@ -554,16 +564,22 @@ export const deletePost = async (req, res, next) => {
         "cannot delete the post that either already deleted or rejected"
       );
     }
+    await updateAdminAnalytics(post.status, "deleted", "previousToNew");
 
-    await updateAdminAnalytics(post.status,null, "deleted");
-
-    await updateUserAnalytics(req.id, "delete", post.status, "deleted");
+    await updateUserAnalytics(
+      post.userId._id.toString(),
+      "prevToNewStatus",
+      post.status,
+      "deleted"
+    );
 
     // Update status to 'deleted'
     post.status = "deleted";
     await post.save();
 
-    res.status(200).json({ message: "Post status changed to deleted" });
+    res
+      .status(200)
+      .json({ message: "Post status changed to deleted", post, oldStatus });
   } catch (error) {
     console.log(error);
     next(error);
@@ -588,6 +604,9 @@ export const updatePostController = async (req, res, next) => {
 
   try {
     const post = await Post.findById(id);
+
+    const oldStatus = post.status;
+    const newStatus = status;
 
     const urls = JSON.parse(parsedUrls || "[]");
     const tags = JSON.parse(Parsedtags || "[]");
@@ -633,6 +652,45 @@ export const updatePostController = async (req, res, next) => {
         400,
         `Invalid status. Allowed values: ${allowedStatuses.join(", ")}`
       );
+    }
+
+    if (oldStatus === "approved" && newStatus === "pending") {
+      await updateAdminAnalytics(oldStatus, newStatus, "decreaseApprovedCount");
+      await updateAdminAnalytics(oldStatus, newStatus, "pending");
+
+      await updateUserAnalytics(
+        req.id,
+        "decreaseApprovedCount",
+        oldStatus,
+        newStatus
+      );
+      await updateUserAnalytics(req.id, "increasePending", oldStatus, newStatus);
+    }
+
+    if (oldStatus === "approved" && newStatus === "draft") {
+      await updateAdminAnalytics(oldStatus, newStatus, "decreaseApprovedCount");
+      await updateAdminAnalytics(oldStatus, newStatus, "decreaseTotalPosts");
+
+      await updateUserAnalytics(
+        req.id,
+        "decreaseApprovedCount",
+        oldStatus,
+        newStatus
+      );
+      await updateUserAnalytics(
+        req.id,
+        "increaseDraft",
+        oldStatus,
+        newStatus
+      );
+    }
+
+    if (oldStatus === "draft" && newStatus === "pending") {
+      await updateAdminAnalytics(oldStatus, newStatus, "addposts");
+      await updateAdminAnalytics(oldStatus, newStatus, "pending");
+
+      await updateUserAnalytics(req.id, "increasePending", oldStatus, newStatus);
+      await updateUserAnalytics(req.id, "decreaseDraft", oldStatus, newStatus);
     }
 
     const updatedUrls = [...urls, post.thumbnailImage];
@@ -704,10 +762,9 @@ export const updatePostController = async (req, res, next) => {
       thumbnailType: thumbnailType,
     };
 
-    await updateAdminAnalytics(null,null, "pending");
-    await updateAdminAnalytics(null,null, "addposts");
 
-    await updateUserAnalytics(req.id, "create", null, status);
+
+
 
     const updated = await Post.findByIdAndUpdate(id, updatedPost, {
       new: true,
@@ -717,7 +774,9 @@ export const updatePostController = async (req, res, next) => {
       success: true,
       message: "Post updated successfully",
       deletionResults,
-      data: updated,
+      post: updated,
+      oldStatus,
+      newStatus,
     });
   } catch (error) {
     console.log(error);

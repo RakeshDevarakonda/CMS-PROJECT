@@ -18,6 +18,33 @@ export const useProfileDataUpdateMutation = () => {
     mutationKey: ["updatecreatorprofile"],
     mutationFn: updateProfileDataApi,
     onSuccess: (data) => {
+
+
+       queryClient.setQueryData(["fetchcreatorprofileData"], (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        const updatedData = {
+          ...oldData,
+
+          ...data.user,
+        };
+        return updatedData;
+      });
+
+      queryClient.setQueryData(["authStatus"], (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        const updatedData = {
+          ...oldData,
+
+          ...data.payload,
+        };
+        return updatedData;
+      });
+
+
       dispatch(toggleEditing());
   
     },
@@ -32,8 +59,7 @@ export const useProfileDataUpdateMutation = () => {
       );
     },
     onSettled: () => {
-      queryClient.refetchQueries({ queryKey: ["fetchcreatorprofileData"], exact: true });
-      queryClient.refetchQueries({ queryKey: ["authStatus"], exact: true });
+      
       dispatch(submittingData());
     },
   });

@@ -267,8 +267,13 @@ export const changePostStatusByAdmin = async (req, res, next) => {
       );
     }
 
-    if (post.role === "creator") {
-      await updateUserAnalytics(post.userId, "update", post.status, status);
+    if (post.userId.role === "creator") {
+      await updateUserAnalytics(
+        post.userId._id.toString(),
+        "prevToNewStatus",
+        post.status,
+        status
+      );
     }
 
     await updateAdminAnalytics(post.status, status, "previousToNew");
@@ -285,17 +290,13 @@ export const changePostStatusByAdmin = async (req, res, next) => {
       rejected: adminanalyticsData.rejected,
     };
 
-
-
-
-    
     const moderatorCount = post.moderatedBy.filter(
       (mod) => mod.role === "moderator"
     ).length;
 
     const moderator = post.moderatedBy.find((mod) => mod.role === "moderator");
 
-    console.log(moderatorCount,moderator);
+    console.log(moderatorCount, moderator);
 
     if (moderatorCount === 1 && moderator) {
       await updateModeratorAnalytics(
@@ -305,10 +306,8 @@ export const changePostStatusByAdmin = async (req, res, next) => {
         "adminreupdate"
       );
     }
-    
 
     post.status = status;
-
 
     const moderationEntry = {
       user: req.id,

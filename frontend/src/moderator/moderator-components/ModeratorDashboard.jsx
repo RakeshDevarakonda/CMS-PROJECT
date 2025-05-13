@@ -8,6 +8,8 @@ import {
   CircularProgress,
   Chip,
   alpha,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import {
   BarChart,
@@ -16,6 +18,7 @@ import {
   TaskAlt,
   HighlightOff,
   Dashboard,
+  Refresh,
 } from "@mui/icons-material";
 import {
   moderatorDashboardSelector,
@@ -48,6 +51,8 @@ const ModeratorDashboard = () => {
     isLoading,
     isSuccess,
     isError,
+    refetch,
+    isRefetching,
   } = useGetModeratorStatsQuery();
 
   const { darkMode } = useSelector(globalReduxSelector);
@@ -150,7 +155,6 @@ const ModeratorDashboard = () => {
 
   useEffect(() => {
     if (isSuccess && statsData) {
-
       const cleanedDataCount = { ...statsData?.dataCount };
 
       dispatch(setDataCount(cleanedDataCount));
@@ -247,7 +251,7 @@ const ModeratorDashboard = () => {
     ];
   }, [dataCount]);
 
-  if (isLoading) {
+  if (isLoading || isRefetching) {
     return (
       <>
         <ModeratorDashboardSkeleton />
@@ -264,33 +268,67 @@ const ModeratorDashboard = () => {
           backgroundColor: currentTheme.background,
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            mb: 4,
-          }}
-        >
-          <Dashboard
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box
             sx={{
-              color: "#6366f1",
-              fontSize: "2rem",
-              mr: 2,
-              p: 1,
-              backgroundColor: isDark ? "rgba(99, 102, 241, 0.1)" : "#e0e7ff",
-              borderRadius: "12px",
-            }}
-          />
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 700,
-              color: currentTheme.textPrimary,
-              fontSize: { xs: "1.5rem", md: "1.75rem" },
+              display: "flex",
+              alignItems: "center",
+              mb: 4,
             }}
           >
-            Moderator DashBoard
-          </Typography>
+            <Dashboard
+              sx={{
+                color: "#6366f1",
+                fontSize: "2rem",
+                mr: 2,
+                p: 1,
+                backgroundColor: isDark ? "rgba(99, 102, 241, 0.1)" : "#e0e7ff",
+                borderRadius: "12px",
+              }}
+            />
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                color: currentTheme.textPrimary,
+                fontSize: { xs: "1.5rem", md: "1.75rem" },
+              }}
+            >
+              Moderator DashBoard
+            </Typography>
+          </Box>
+          <Box>
+            <Tooltip
+              arrow
+              title="Refresh"
+              placement="top"
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    bgcolor: theme === "dark" ? "#1e1e1e" : "#ffffff",
+                    color: currentTheme.textPrimary,
+                    boxShadow:
+                      theme === "light"
+                        ? "0 4px 20px rgba(0,0,0,0.05)"
+                        : "0 4px 20px rgba(0,0,0,0.2)",
+                    "& .MuiTooltip-arrow": {
+                      color: theme === "dark" ? "#1e1e1e" : "#ffffff",
+                    },
+                  },
+                },
+              }}
+            >
+              <IconButton
+                onClick={() => {
+                  refetch();
+                }}
+                aria-label="filter list"
+                sx={{ color: currentTheme.textPrimary }}
+              >
+                <Refresh sx={{ fontSize: "1.5rem" }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
 
         <Grid

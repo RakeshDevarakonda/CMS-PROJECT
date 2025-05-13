@@ -16,11 +16,12 @@ import {
 
 import { updateCreatorPostApi } from "../creator-apis/UpdateCreatorPostApi.jsx";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   setErrorAndSuccesDialogMessage,
   toggleErrorAndSuccesDialog,
 } from "../../global-redux/GlobalRedux.jsx";
+import { manageContentSelector } from "../../global-redux/ManageContentSlice.jsx";
 
 export const useUpdateMutation = () => {
   const dispatch = useDispatch();
@@ -28,12 +29,51 @@ export const useUpdateMutation = () => {
   const queryClient = useQueryClient();
 
   const { publishPost } = useSelector(createPostSelector);
+
+  const { editid } = useParams();
+
+  const { params } = useSelector(manageContentSelector);
   const mutation = useMutation({
     mutationKey: ["updateCreatorPost"],
     mutationFn: updateCreatorPostApi,
     onSuccess: (data) => {
-      queryClient.refetchQueries(["fetchcreatormanagecontent"]);
-      queryClient.refetchQueries(["GetCreatorStatsQuery"]);
+      console.log(data);
+      queryClient.setQueryData(
+        ["fetchcreatormanagecontent", params],
+        (oldData) => {
+          if (oldData) {
+            const filteredPosts = oldData.posts.filter((e) => e._id !== editid);
+            return {
+              ...oldData,
+              posts: [data.post, ...filteredPosts],
+            };
+          }
+          return oldData;
+        }
+      );
+
+      queryClient.setQueryData(["GetCreatorStatsQuery"], (oldData) => {
+        if (!oldData) return oldData;
+
+        const { approved, pending, draft, totalPosts } = oldData.dataCount;
+        const { oldStatus, newStatus } = data;
+
+        const newData = { ...oldData, dataCount: { ...oldData.dataCount } };
+
+        if (oldStatus === "approved" && newStatus === "pending") {
+          newData.dataCount.approved = approved > 0 ? approved - 1 : 0;
+          newData.dataCount.pending += 1;
+        } else if (oldStatus === "approved" && newStatus === "draft") {
+          newData.dataCount.approved = approved > 0 ? approved - 1 : 0;
+          newData.dataCount.draft += 1;
+        } else if (oldStatus === "draft" && newStatus === "pending") {
+          newData.dataCount.draft -= 1;
+          newData.dataCount.pending += 1;
+        }
+
+        return newData;
+      });
+
       navigate(-1);
 
       if (publishPost) {

@@ -2,6 +2,8 @@ import AdminAnalytics from "../models/admin-analytics.js";
 import { throwError } from "./throw-error.js";
 
 export const updateAdminAnalytics = async (prev, newstatus, actionType) => {
+
+  console.log(prev, newstatus, actionType)
   try {
     let analytics = await AdminAnalytics.findOne();
 

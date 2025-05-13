@@ -4,11 +4,14 @@ import { throwError } from "./throw-error.js";
 export const updateUserAnalytics = async (
   userId,
   actionType,
-  oldPostStatus,
-  newPostStatus
+  oldPost,
+  newPost
 ) => {
+  console.log(userId, actionType, oldPost, newPost);
   try {
     let userAnalytics = await UserAnalytics.findOne({ userId });
+
+    console.log(actionType, oldPost, newPost);
 
     if (!userAnalytics) {
       userAnalytics = new UserAnalytics({
@@ -24,20 +27,72 @@ export const updateUserAnalytics = async (
       await userAnalytics.save();
     }
 
+    const statusMap = {
+      draft: "draftCount",
+      pending: "pendingCount",
+      approved: "approvedCount",
+      rejected: "rejectedCount",
+      deleted: "deletedCount",
+    };
+
+    const oldPostStatus = statusMap[oldPost];
+    const newPostStatus = statusMap[newPost];
+
+    console.log(newPostStatus);
+
     switch (actionType) {
       case "create":
         userAnalytics.totalPosts += 1;
-        if (newPostStatus === "draft") {
+        if (newPostStatus === "draftCount") {
           userAnalytics.draftCount += 1;
-        } else if (newPostStatus === "pending") {
+        } else if (newPostStatus === "pendingCount") {
           userAnalytics.pendingCount += 1;
         }
         break;
 
       case "prevToNewStatus":
-        userAnalytics[oldPostStatus] -= 1;
-        userAnalytics[newPostStatus] += 1;
+        if (
+          oldPostStatus &&
+          userAnalytics[oldPostStatus] > 0 &&
+          newPostStatus
+        ) {
+          userAnalytics[oldPostStatus] -= 1;
+          userAnalytics[newPostStatus] += 1;
+        }
+        break;
 
+      case "decreaseApprovedCount":
+        if (userAnalytics.approvedCount > 0) {
+          userAnalytics.approvedCount -= 1;
+        }
+        break;
+
+      case "pending":
+        if (userAnalytics.pendingCount > 0) {
+          userAnalytics.pendingCount -= 1;
+        }
+        break;
+
+      case "increasePending":
+        userAnalytics.pendingCount += 1;
+        break;
+
+      case "increaseDraft":
+        userAnalytics.draftCount += 1;
+        break;
+
+      case "decreaseDraft":
+        userAnalytics.draftCount -= 1;
+        break;
+
+      case "decreaseTotalPosts":
+        if (userAnalytics.totalPosts > 0) {
+          userAnalytics.totalPosts -= 1;
+        }
+        break;
+
+      case "addposts":
+        userAnalytics.totalPosts += 1;
         break;
 
       default:

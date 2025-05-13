@@ -89,6 +89,7 @@ export default function CreatorDashboard() {
   const {
     data: statsData,
     isLoading: isCreatorLoading,
+    refetch,isRefetching,
     isError,
   } = useGetCreatorStatsQuery();
 
@@ -103,7 +104,7 @@ export default function CreatorDashboard() {
 
     const statusData = statsData?.dataCount
       ? Object.entries(statsData?.dataCount)
-          .filter(([key]) => key !== "totalCount")
+          .filter(([key]) => key !== "totalPosts")
           .map(([status, value]) => {
             const key = status.charAt(0).toUpperCase() + status.slice(1);
 
@@ -143,7 +144,7 @@ export default function CreatorDashboard() {
     dispatch(setTrendData(trend));
   }, [statsData]);
 
-  if (isCreatorLoading) {
+  if (isCreatorLoading || isRefetching) {
     return (
       <>
         <DashboardStatsSkeleton />;
@@ -152,5 +153,5 @@ export default function CreatorDashboard() {
     );
   }
 
-  return <GlobalDashboard getStatusConfig={getStatusConfig} />;
+  return <GlobalDashboard getStatusConfig={getStatusConfig} refetch={refetch} />;
 }

@@ -9,7 +9,7 @@ export async function updateCreatorPostApi(FormDataSend) {
       FormDataSend,
       { withCredentials: true }
     );
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.log(error);
     let errorMessage;
