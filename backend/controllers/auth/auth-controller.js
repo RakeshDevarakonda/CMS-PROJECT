@@ -57,7 +57,7 @@ export const signupController = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     if (role !== "admin") {
-      await updateAdminAnalytics(null,null, role);
+      await updateAdminAnalytics(null, null, role);
     }
 
     const newUser = new User({
@@ -169,8 +169,8 @@ export const checkUserLoginController = async (req, res, next) => {
 export const logoutController = (req, res, next) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: process.env.COOKIE_SECURE === "true",
+    sameSite: process.env.COOKIE_SAMESITE || "Lax",
     path: "/",
   });
 
