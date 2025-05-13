@@ -354,7 +354,7 @@ export default function Navbar() {
           >
             M
           </Avatar>
-          <Logo currentcolors={currentColors}>MyLogo</Logo>
+          <Logo currentcolors={currentColors}>CMS </Logo>
         </Box>
         <IconButton onClick={toggleDrawer} sx={{ color: currentColors.text }}>
           <CloseIcon />
