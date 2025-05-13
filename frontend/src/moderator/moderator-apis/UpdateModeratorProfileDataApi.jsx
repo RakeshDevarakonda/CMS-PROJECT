@@ -19,7 +19,7 @@ export async function updateModeratorProfileDataApi(formData) {
     } else {
       errorMessage =
         error.response?.data?.message ||
-        "There was an error while fetching the post";
+        "There was an error while updating profile"
     }
     throw new Error(errorMessage);
   }

@@ -29,7 +29,7 @@ export async function updateAdminStatusApi({
     } else {
       errorMessage =
         error.response?.data?.message ||
-        "There was an error while fetching the post";
+        "There was an error while updating the post";
     }
 
     if (error?.response?.data?.customCode) {

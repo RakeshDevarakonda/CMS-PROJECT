@@ -17,7 +17,7 @@ export const moderatorrStatsApi = async () => {
     } else {
       errorMessage =
         error.response?.data?.message ||
-        "There was an error while fetching the post";
+        "There was an error while updating the post";
     }
     throw new Error(errorMessage);
   }

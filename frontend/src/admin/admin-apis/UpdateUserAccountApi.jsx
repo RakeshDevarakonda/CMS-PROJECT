@@ -21,7 +21,7 @@ export async function updateUsersAccountApi(userId) {
     } else {
       errorMessage =
         error.response?.data?.message ||
-        "There was an error while fetching the post";
+        "There was an error while updating the account";
     }
     throw new Error(errorMessage);
   }
