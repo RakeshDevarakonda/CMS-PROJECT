@@ -125,6 +125,7 @@ export const signinController = async (req, res, next) => {
         username: user.name,
         email: user.email,
         role: user.role,
+        isActive: user.isActive,
       },
     });
   } catch (error) {

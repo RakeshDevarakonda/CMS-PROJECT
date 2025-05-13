@@ -420,7 +420,7 @@ export default function NavbarSidebar() {
             },
           }}
         >
-          <span>{userDetails.isActive ? "Active" : "InActive"}</span>
+          <span>{userDetails?.isActive ? "Active" : "InActive"}</span>
         </Typography>
       </Box>
       <Divider sx={{ my: 0.5, borderColor: currentColors.divider }} />
