@@ -43,6 +43,7 @@ export default function ManageContentHeader({
     contentRowsPerPage,
     contentShowFilter,
     contentCurrentPageNumber,
+    totalPages,
     contentTotalData,
   } = useSelector(manageContentSelector);
   return (
@@ -77,11 +78,7 @@ export default function ManageContentHeader({
             sx={{ color: colors.textSecondary, mt: 0.5 }}
           >
             Total {contentDataCount?.totalCount} details • Page{" "}
-            {contentCurrentPageNumber + 1} of{" "}
-            {Math.max(
-              1,
-              Math.ceil(contentTotalData.length / contentRowsPerPage)
-            )}
+            {contentCurrentPageNumber + 1} of {totalPages}
           </Typography>
         </Box>
 

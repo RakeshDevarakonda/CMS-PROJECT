@@ -34,6 +34,7 @@ import {
   setManageUsersTotalData,
   setParams,
   setSelectedFilterType,
+  setTotalPages,
   setVersionList,
   setVersionposts,
 } from "../../global-redux/ManageContentSlice.jsx";
@@ -313,6 +314,8 @@ const ManageContent = ({ statusfilter, userDataType }) => {
       if (backendDataintable.statusSummary) {
         dispatch(setContentDataCount(backendDataintable.statusSummary));
       }
+
+      dispatch(setTotalPages(backendDataintable.totalPages || 0));
     }
   }, [
     backendDataintable,
@@ -356,7 +359,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
 
       dispatch(setContentTotalData(updatedContentTotalData));
 
-      dispatch(setVersionposts())
+      dispatch(setVersionposts());
     }
   }, [singleversiondata, refreshKey, versionList, versionposts]);
 

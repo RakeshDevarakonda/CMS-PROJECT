@@ -50,6 +50,7 @@ const initialState = {
   isSearchModeratorName: "false",
   adminPostStatusDetails: {},
   manageuser: null,
+  totalPages: 0,
 
   moderatoratedByData: {
     _id: null,
@@ -192,6 +193,9 @@ const manageContentSlice = createSlice({
       state.manageuser = action.payload;
     },
 
+    setTotalPages: (state, action) => {
+      state.totalPages = action.payload;
+    },
     setModeratoratedByData: (state, action) => {
       state.moderatoratedByData = {
         ...state.moderatoratedByData,
@@ -204,6 +208,7 @@ const manageContentSlice = createSlice({
 export const manageContentReducer = manageContentSlice.reducer;
 
 export const {
+  setTotalPages,
   setManageuser,
   setParams,
   setModeratoratedByData,

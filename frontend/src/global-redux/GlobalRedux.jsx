@@ -32,8 +32,11 @@ const globalReduxSlice = createSlice({
     setJustLoggedOut: (state, action) => {
       state.isUserLoggedout = action.payload;
     },
-    toggleDarkMode: (state) => {
-      state.darkMode = !state.darkMode;
+    toggleDarkMode: (state, action) => {
+      state.darkMode =
+        typeof action.payload === "boolean" ? action.payload : !state.darkMode;
+
+      localStorage.setItem("darkMode", JSON.stringify(state.darkMode));
     },
     toggleErrorAndSuccesDialog: (state, action) => {
       if (typeof action.payload === "boolean") {

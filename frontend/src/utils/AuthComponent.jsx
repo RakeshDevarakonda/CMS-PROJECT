@@ -1,10 +1,10 @@
-// AuthLoader.js
 import { useDispatch, useSelector } from "react-redux";
 import { GetAuthQuery } from "../home-page/home-page-tanstack-queries/GetAuthQuery.jsx";
 import {
   setAuthChecked,
   setIsUserLogged,
   setUserDetails,
+  toggleDarkMode,
 } from "../global-redux/GlobalRedux.jsx";
 import { useEffect } from "react";
 import { FullPageLoader } from "./FullPageLoader.jsx";
@@ -13,12 +13,20 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export const AuthComponent = ({ children }) => {
   const dispatch = useDispatch();
-  const { isAuthChecked } = useSelector(globalReduxSelector);
+  const { isAuthChecked, darkMode } = useSelector(globalReduxSelector);
 
   const { data: authData, isSuccess, isLoading, isError } = GetAuthQuery();
 
   const queryClient = useQueryClient();
 
+  const savedDarkMode = JSON.parse(localStorage.getItem("darkMode"));
+
+  if (savedDarkMode !== null) {
+    dispatch(toggleDarkMode(savedDarkMode));
+  } else {
+    localStorage.setItem("darkMode", JSON.stringify(true));
+    dispatch(toggleDarkMode(false));
+  }
 
   useEffect(() => {
     if (isSuccess && authData) {
