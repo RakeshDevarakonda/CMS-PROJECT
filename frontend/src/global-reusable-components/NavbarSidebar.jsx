@@ -943,7 +943,9 @@ export default function NavbarSidebar() {
                     fontWeight: 600,
                   }}
                 >
-                  JD
+                  {userDetails?.username
+                    ? userDetails.username.charAt(0).toUpperCase()
+                    : ""}
                 </Avatar>
               </IconButton>
 

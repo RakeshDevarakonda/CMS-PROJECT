@@ -77,7 +77,7 @@ export default function ManageContentHeader({
             variant="body2"
             sx={{ color: colors.textSecondary, mt: 0.5 }}
           >
-            Total {contentDataCount?.totalCount} details • Page{" "}
+            Total {contentDataCount?.totalCount} Articles • Page{" "}
             {contentCurrentPageNumber + 1} of {totalPages}
           </Typography>
         </Box>

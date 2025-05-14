@@ -25,7 +25,7 @@ export const AuthComponent = ({ children }) => {
     dispatch(toggleDarkMode(savedDarkMode));
   } else {
     localStorage.setItem("darkMode", JSON.stringify(true));
-    dispatch(toggleDarkMode(false));
+    dispatch(toggleDarkMode(true));
   }
 
   useEffect(() => {
