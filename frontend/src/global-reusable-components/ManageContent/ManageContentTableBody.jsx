@@ -534,7 +534,7 @@ export default function ManageContentTableBody({
           </TableCell>
         )}
 
-        {userDetails?.role != "moderator" && (
+        {userDetails?.role == "creator" && (
           <TableCell align="center">
             <Select
               value={

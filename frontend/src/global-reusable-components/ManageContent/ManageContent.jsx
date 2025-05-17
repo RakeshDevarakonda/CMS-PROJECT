@@ -314,8 +314,9 @@ const ManageContent = ({ statusfilter, userDataType }) => {
       if (backendDataintable.statusSummary) {
         dispatch(setContentDataCount(backendDataintable.statusSummary));
       }
+      console.log(backendDataintable)
 
-      dispatch(setTotalPages(backendDataintable.totalPages || 0));
+      dispatch(setTotalPages(backendDataintable?.totalPages || 0));
     }
   }, [
     backendDataintable,
@@ -506,7 +507,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
                         <TableCell align="center">Recent Moderated </TableCell>
                       )}
 
-                      {userDetails?.role != "moderator" && (
+                      {userDetails?.role == "creator" && (
                         <TableCell align="center">Version</TableCell>
                       )}
                       <TableCell align="center">Action</TableCell>

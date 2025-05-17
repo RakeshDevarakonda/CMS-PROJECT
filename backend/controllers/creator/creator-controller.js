@@ -101,8 +101,6 @@ export const createPostController = async (req, res, next) => {
 
     await updateUserAnalytics(req.id, "create", null, status);
 
-    
-
     const savedPost = await newPost.save();
     const deletionResults = await deleteUrl(parsedUrls);
 
@@ -215,9 +213,10 @@ export const getAllPostsController = async (req, res, next) => {
       pending: userAnalytics?.pendingCount || 0,
       rejected: userAnalytics?.rejectedCount || 0,
       deleted: userAnalytics?.deletedCount || 0,
-      totalPosts: posts.length,
+      totalCount: posts.length,
     };
 
+    console.log(Math.ceil(posts.length / limit));
     res.status(200).json({
       totalPages: Math.ceil(posts.length / limit),
       statusSummary,
@@ -664,7 +663,12 @@ export const updatePostController = async (req, res, next) => {
         oldStatus,
         newStatus
       );
-      await updateUserAnalytics(req.id, "increasePending", oldStatus, newStatus);
+      await updateUserAnalytics(
+        req.id,
+        "increasePending",
+        oldStatus,
+        newStatus
+      );
     }
 
     if (oldStatus === "approved" && newStatus === "draft") {
@@ -677,19 +681,19 @@ export const updatePostController = async (req, res, next) => {
         oldStatus,
         newStatus
       );
-      await updateUserAnalytics(
-        req.id,
-        "increaseDraft",
-        oldStatus,
-        newStatus
-      );
+      await updateUserAnalytics(req.id, "increaseDraft", oldStatus, newStatus);
     }
 
     if (oldStatus === "draft" && newStatus === "pending") {
       await updateAdminAnalytics(oldStatus, newStatus, "addposts");
       await updateAdminAnalytics(oldStatus, newStatus, "pending");
 
-      await updateUserAnalytics(req.id, "increasePending", oldStatus, newStatus);
+      await updateUserAnalytics(
+        req.id,
+        "increasePending",
+        oldStatus,
+        newStatus
+      );
       await updateUserAnalytics(req.id, "decreaseDraft", oldStatus, newStatus);
     }
 
@@ -761,10 +765,6 @@ export const updatePostController = async (req, res, next) => {
       thumbnailImage: newThumbnail,
       thumbnailType: thumbnailType,
     };
-
-
-
-
 
     const updated = await Post.findByIdAndUpdate(id, updatedPost, {
       new: true,

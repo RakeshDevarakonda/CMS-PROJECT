@@ -68,7 +68,8 @@ export default function ManageContentOnlyTableSkeleton({ manageuser }) {
                     </Box>
                   </Box>
                 </TableCell>
-                <TableCell>
+               {userDetails?.role !=="admin" && (
+                 <TableCell>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Skeleton
                       variant="rectangular"
@@ -90,6 +91,7 @@ export default function ManageContentOnlyTableSkeleton({ manageuser }) {
                     </Box>
                   </Box>
                 </TableCell>
+               )}
                 <TableCell>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Skeleton

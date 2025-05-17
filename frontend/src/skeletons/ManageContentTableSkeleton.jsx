@@ -233,7 +233,7 @@ const ManageContentTableSkeleton = () => {
                   "&:last-child td, &:last-child th": { border: 0 }, // Remove border from last row
                 }}
               >
-                {[...Array(7)].map((header, index) => (
+                {[...Array(6)].map((header, index) => (
                   <TableCell key={index}>
                     <Skeleton
                       sx={{ background: colors.cardBackground }}
