@@ -12,7 +12,7 @@
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.48",
     "mongodb": "^6.15.0",
-    "mongoose": "^8.13.2",
+    "mongoose": "^8.14.0",
     "multer": "^1.4.5-lts.2",
     "socket.io": "^4.8.1",
     "winston": "^3.17.0"
