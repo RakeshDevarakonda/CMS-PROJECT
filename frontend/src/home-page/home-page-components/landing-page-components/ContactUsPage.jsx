@@ -121,7 +121,7 @@ const ContactUsPage = () => {
             gutterBottom
             sx={{
               fontWeight: 700,
-              color: "#ffffff",
+              color: themeColors.text,
               letterSpacing: 0.5,
             }}
           >
@@ -132,7 +132,7 @@ const ContactUsPage = () => {
             align="center"
             sx={{
               mb: 2,
-              color: "rgba(255,255,255,0.9)",
+              color: themeColors.text,
               maxWidth: "800px",
               mx: "auto",
               lineHeight: 1.5,
@@ -480,7 +480,7 @@ const ContactUsPage = () => {
           <Typography
             variant={isMobile ? "h5" : "h4"}
             gutterBottom
-            sx={{ color: "#ffffff", fontWeight: 600 }}
+            sx={{ color: themeColors.text, fontWeight: 600 }}
           >
             Stay Updated
           </Typography>
@@ -488,7 +488,7 @@ const ContactUsPage = () => {
             variant="body1"
             paragraph
             sx={{
-              color: "rgba(255,255,255,0.9)",
+              color: themeColors.text,
               maxWidth: 700,
               mx: "auto",
               mb: 3,
