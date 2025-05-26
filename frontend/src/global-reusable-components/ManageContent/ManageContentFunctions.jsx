@@ -296,18 +296,23 @@ export default function useManageContentFunctions() {
   };
 
   const sortedData = useMemo(() => {
-    if (versionposts?.id) {
+    // if (versionposts?.id) {
+    //   return [...contentTotalData].slice(
+    //     contentCurrentPageNumber * contentRowsPerPage,
+    //     contentCurrentPageNumber * contentRowsPerPage + contentRowsPerPage
+    //   );
+    // }
       return [...contentTotalData].slice(
         contentCurrentPageNumber * contentRowsPerPage,
         contentCurrentPageNumber * contentRowsPerPage + contentRowsPerPage
       );
-    }
 
-    return [...contentTotalData].sort((a, b) => {
-      const dateA = new Date(a.updatedAt).getTime();
-      const dateB = new Date(b.updatedAt).getTime();
-      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
-    });
+
+    // return [...contentTotalData].sort((a, b) => {
+    //   const dateA = new Date(a.updatedAt).getTime();
+    //   const dateB = new Date(b.updatedAt).getTime();
+    //   return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+    // });
   }, [contentTotalData, sortOrder]);
 
   const displayedOpportunities = useMemo(() => {
