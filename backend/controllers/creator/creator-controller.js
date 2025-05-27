@@ -180,6 +180,7 @@ export const getAllPostsController = async (req, res, next) => {
     }
 
     let posts = await Post.find(query).sort({ version: -1 });
+   
 
     const searchTerm = finalSearchterm?.trim().toLowerCase();
     if (searchTerm) {
@@ -216,7 +217,6 @@ export const getAllPostsController = async (req, res, next) => {
       totalCount: posts.length,
     };
 
-    console.log(Math.ceil(posts.length / limit));
     res.status(200).json({
       totalPages: Math.ceil(posts.length / limit),
       statusSummary,

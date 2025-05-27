@@ -36,6 +36,8 @@ export const getAllAdminPosts = async (req, res, next) => {
     const limit = parseInt(contentRowsPerPage);
     const skip = page * limit;
 
+    console.log(page,limit)
+
     const query = {
       status: { $ne: "deleted" },
     };
@@ -151,6 +153,7 @@ export const getAllAdminPosts = async (req, res, next) => {
     const sort = {};
     sort[sortBy] = sortOrder === "asc" ? 1 : -1;
     const totalCount = await Post.countDocuments(query);
+
     let posts = await Post.find(query)
       .sort(sort)
       .skip(skip)
@@ -158,6 +161,7 @@ export const getAllAdminPosts = async (req, res, next) => {
       .populate("userId", "name role")
       .populate("moderatedBy.user", "name role")
       .lean();
+
     if (finalSearchterm) {
       const searchTerm = finalSearchterm.trim().toLowerCase();
       posts = posts.filter((post) =>

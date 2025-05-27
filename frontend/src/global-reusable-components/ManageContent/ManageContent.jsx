@@ -281,21 +281,22 @@ const ManageContent = ({ statusfilter, userDataType }) => {
     if (isSuccess && backendDataintable) {
       const shouldResetData =
         contentCurrentPageNumber === 0 ||
-        (backendDataintable.posts && backendDataintable.posts.length === 0);
+        (backendDataintable?.posts && backendDataintable?.posts.length === 0);
 
       if (shouldResetData) {
         dispatch(setContentTotalData(backendDataintable.posts || []));
       } else if (backendDataintable.posts?.length) {
-        const existingIds = new Set(contentTotalData.map((opp) => opp._id));
-        const newOpportunities = backendDataintable.posts.filter(
-          (opp) => !existingIds.has(opp._id)
+        const existingMap = new Map(
+          contentTotalData.map((item) => [item._id, item])
         );
 
-        if (newOpportunities.length > 0) {
-          dispatch(
-            setContentTotalData([...contentTotalData, ...newOpportunities])
-          );
-        }
+        console.log(existingMap)
+
+        backendDataintable.posts.forEach((newItem) => {
+          existingMap.set(newItem._id, newItem);
+        });
+
+        dispatch(setContentTotalData(Array.from(existingMap.values())));
       }
 
       isFirstLoad.current = false;
@@ -314,7 +315,6 @@ const ManageContent = ({ statusfilter, userDataType }) => {
       if (backendDataintable.statusSummary) {
         dispatch(setContentDataCount(backendDataintable.statusSummary));
       }
-      console.log(backendDataintable)
 
       dispatch(setTotalPages(backendDataintable?.totalPages || 0));
     }

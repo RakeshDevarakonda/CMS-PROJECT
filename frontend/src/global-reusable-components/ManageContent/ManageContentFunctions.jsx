@@ -203,8 +203,6 @@ export default function useManageContentFunctions() {
     );
     dispatch(setModeratorPostStatusChange({ id, status, source, version }));
     dispatch(toggleErrorAndSuccesDialog());
-
-   
   };
 
   const handleAdminStatusChange = (id, status, source, version) => {
@@ -302,11 +300,14 @@ export default function useManageContentFunctions() {
     //     contentCurrentPageNumber * contentRowsPerPage + contentRowsPerPage
     //   );
     // }
-      return [...contentTotalData].slice(
-        contentCurrentPageNumber * contentRowsPerPage,
-        contentCurrentPageNumber * contentRowsPerPage + contentRowsPerPage
-      );
 
+    // console.log(contentTotalData)
+    // return [...contentTotalData].slice(
+    //   contentCurrentPageNumber * contentRowsPerPage,
+    //   contentCurrentPageNumber * contentRowsPerPage + contentRowsPerPage
+    // );
+
+    return contentTotalData
 
     // return [...contentTotalData].sort((a, b) => {
     //   const dateA = new Date(a.updatedAt).getTime();
