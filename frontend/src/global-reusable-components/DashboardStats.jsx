@@ -111,7 +111,7 @@ const DashboardStats = ({ dataCount,refetch }) => {
         to: "/creator/managecontent/pending",
       },
       {
-        label: "approved",
+        label: "Approved",
         value: approved,
         bgColor: "#90be6d",
         gradientFrom: isDark ? "#43aa8b" : "#90be6d",
