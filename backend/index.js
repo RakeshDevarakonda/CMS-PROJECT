@@ -16,7 +16,7 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import helmet from "helmet";
 import { throwError } from "./utils/throw-error.js";
-// import { initSocketServer } from "./socket.js";
+import { initSocketServer } from "./socket.js";
 import { extractPublicId } from "./utils/DeleteUrls.js";
 import { v2 as cloudinary } from "cloudinary";
 
