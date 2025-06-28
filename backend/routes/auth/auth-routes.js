@@ -6,7 +6,8 @@ import {
   signupController,
 } from "../../controllers/auth/auth-controller.js";
 import { verifyjwtToken } from "../../middlewares/verifyjwtToken.js";
-import { rateLimiter } from "../../index.js";
+import { rateLimiter } from "../../middlewares/ratelimitter.js";
+
 
 
 

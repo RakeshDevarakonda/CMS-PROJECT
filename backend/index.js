@@ -12,12 +12,11 @@ import moderatoreRouter from "./routes/moderator/moderator-routes.js";
 import { errorHandler } from "./utils/error-handler.js";
 import adminRouter from "./routes/admin/admin-routes.js";
 import homePageRouter from "./routes/homepage/home-page-routes.js";
-import rateLimit from "express-rate-limit";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import helmet from "helmet";
 import { throwError } from "./utils/throw-error.js";
-import { initSocketServer } from "./socket.js";
+// import { initSocketServer } from "./socket.js";
 import { extractPublicId } from "./utils/DeleteUrls.js";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -30,26 +29,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(helmet());
 
-export const rateLimiter = rateLimit({
-  windowMs: 1000 * 60 * 10, // 1000milliseconds equals to 1 second toatal 10 minutes
-  max: 100,
-  message: {
-    status: 429,
-    error: "Too many login attempts, please try again after 10 minutes.",
-  },
-  handler: (req, res, next, options) => {
-    console.error(
-      `Rate limit hit: ${req.ip} tried ${req.originalUrl} too many times.`
-    );
 
-    throwError(
-      429,
-      "Too many login attempts, please try again after 10 minutes."
-    );
-
-    res.status(options.statusCode).json(options.message);
-  },
-});
 
 
 
@@ -101,13 +81,13 @@ app.use("/api/creator", createrRouter);
 app.use("/api/moderator", moderatoreRouter);
 app.use("/api/admin", adminRouter);
 
-const server = createServer(app);
-initSocketServer(server);
+// const server = createServer(app);
+// initSocketServer(server);
 
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 8000;
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   mongoosedatabse();
   console.log("Example app listening on port " + PORT + "!");
 });
