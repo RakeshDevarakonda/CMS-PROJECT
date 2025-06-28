@@ -30,7 +30,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(helmet());
 
-const rateLimiter = rateLimit({
+export const rateLimiter = rateLimit({
   windowMs: 1000 * 60 * 10, // 1000milliseconds equals to 1 second toatal 10 minutes
   max: 100,
   message: {
@@ -51,7 +51,7 @@ const rateLimiter = rateLimit({
   },
 });
 
-app.use(rateLimiter);
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
