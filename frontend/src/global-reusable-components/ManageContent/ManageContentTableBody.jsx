@@ -546,7 +546,7 @@ export default function ManageContentTableBody({
                 const originalOne = versionList[opportunity._id]?.original;
 
                 const theSource =
-                  selectedVersion === originalOne ? "post" : "posthistoru";
+                  selectedVersion === originalOne ? "post" : "posthistory";
 
                 handleVersionChange({
                   source: theSource,

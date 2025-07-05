@@ -330,7 +330,7 @@ const ManageContent = ({ statusfilter, userDataType }) => {
 
   useEffect(() => {
     if (singleversiondata && singleversionsuccess) {
-      let updatedContentTotalData = sortedData;
+      let updatedContentTotalData = [...sortedData];
 
       if (!versionposts && versionposts.id) {
         dispatch(setContentTotalData(updatedContentTotalData));
