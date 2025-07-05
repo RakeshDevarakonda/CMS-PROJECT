@@ -307,7 +307,7 @@ export default function useManageContentFunctions() {
     //   contentCurrentPageNumber * contentRowsPerPage + contentRowsPerPage
     // );
 
-    return contentTotalData
+    return contentTotalData;
 
     // return [...contentTotalData].sort((a, b) => {
     //   const dateA = new Date(a.updatedAt).getTime();
@@ -372,6 +372,8 @@ export default function useManageContentFunctions() {
     dispatch(setContentDateFilter("All"));
     dispatch(setContentCustomStartDate(""));
     dispatch(setContentCustomEndDate(""));
+    dispatch(setFinalStartDates(""));
+    dispatch(setFinalEndDates(""));
   };
 
   const getStatusStyle = (status) => {
