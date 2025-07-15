@@ -17,7 +17,7 @@ docker run -d --name cms-frontend -p 5173:5173 -e VITE_API_BASE_URL=http://local
 ## Run CMS Backend in Docker
 - Note :- make sure your change you own environment variables 
 ```
-docker run -d --name cms-backend -p 8000:8000 -e CLOUDINARY_CLOUD_NAME=dc6zc9tvl -e CLOUDINARY_API_KEY=656724343825776 -e CLOUDINARY_API_SECRET=imGI86RGfG4dvq6USYlbooypjOs -e PORT=8000 -e MONGODB_URL=your-mongodb-url -e FRONTEND_URL1=http://localhost:5173 -e FRONTEND_URL2=http://localhost:5174 -e JWT_SECRET=your-secret-key -e COOKIE_SECURE=true -e COOKIE_SAMESITE=None rakeshdevarakonda/cms-backend
+docker run -d --name cms-backend -p 8000:8000 -e CLOUDINARY_CLOUD_NAME=yourkey -e CLOUDINARY_API_KEY=yourkey CLOUDINARY_API_SECRET=yourkey -e PORT=8000 -e MONGODB_URL=your-mongodb-url -e FRONTEND_URL1=http://localhost:5173 -e FRONTEND_URL2=http://localhost:5174 -e JWT_SECRET=your-secret-key -e COOKIE_SECURE=true -e COOKIE_SAMESITE=None rakeshdevarakonda/cms-backend
 ```
 ## Technologies Used
 
