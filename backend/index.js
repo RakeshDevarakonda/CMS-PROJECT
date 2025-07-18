@@ -23,7 +23,7 @@ import { v2 as cloudinary } from "cloudinary";
 const app = express();
 
 const corsOptions = {
-  origin: [process.env.FRONTEND_URL1, process.env.FRONTEND_URL2],
+  origin: [process.env.FRONTEND_URL1, process.env.FRONTEND_URL2,process.env.FRONTEND_URL3],
   credentials: true,
 };
 app.use(cors(corsOptions));
