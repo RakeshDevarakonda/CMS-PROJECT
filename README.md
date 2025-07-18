@@ -8,9 +8,17 @@ A scalable Content Management System (CMS) built with **React** and **Node.js** 
 - Note:- it may take 1-2 minutes to load initially.....please wait
 - https://cms-project-qghq.onrender.com
 
+## Run CMS Frontend in Docker
+```bash
+docker run -d --name cms-frontend -p 5173:5173 -e VITE_API_BASE_URL=http://localhost:8000 rakeshdevarakonda/cms-frontend
 
+```
 
-
+## Run CMS Backend in Docker
+- Note :- make sure your change you own environment variables 
+```
+docker run -d --name cms-backend -p 8000:8000 -e CLOUDINARY_CLOUD_NAME=yourkey -e CLOUDINARY_API_KEY=yourkey CLOUDINARY_API_SECRET=yourkey -e PORT=8000 -e MONGODB_URL=your-mongodb-url -e FRONTEND_URL1=http://localhost:5173 -e FRONTEND_URL2=http://localhost:5174 -e JWT_SECRET=your-secret-key -e COOKIE_SECURE=true -e COOKIE_SAMESITE=None rakeshdevarakonda/cms-backend
+```
 ## Technologies Used
 
 - **Frontend**: React, React Query
