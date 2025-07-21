@@ -13,3 +13,7 @@ logs.txt
 */logs.txt    
 
 frontend/dist/
+
+Dockerfile 
+
+.dockerignore

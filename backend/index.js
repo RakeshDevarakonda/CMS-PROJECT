@@ -23,15 +23,15 @@ import { v2 as cloudinary } from "cloudinary";
 const app = express();
 
 const corsOptions = {
-  origin: [process.env.FRONTEND_URL1, process.env.FRONTEND_URL2,process.env.FRONTEND_URL3],
+  origin: [
+    process.env.FRONTEND_URL1,
+    process.env.FRONTEND_URL2,
+    process.env.FRONTEND_URL3,
+  ],
   credentials: true,
 };
 app.use(cors(corsOptions));
 app.use(helmet());
-
-
-
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -73,8 +73,6 @@ app.post("/api/addurls", upload.array("file"), async (req, res, next) => {
     next(error);
   }
 });
-
-
 
 app.use("/api/homepage", homePageRouter);
 app.use("/api/auth", authRouter);
