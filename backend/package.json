@@ -11,7 +11,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.48",
-    "mongodb": "^6.15.0",
+    "mongodb": "^6.17.0",
     "mongoose": "^8.13.2",
     "multer": "^2.0.0",
     "socket.io": "^4.8.1",
