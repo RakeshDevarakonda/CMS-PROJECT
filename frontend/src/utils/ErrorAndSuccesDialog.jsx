@@ -30,7 +30,6 @@ import {
   manageContentSelector,
   setAdminPostStatusChange,
   setAdminPostStatusDetails,
-  setContentTotalData,
   setModeratorPostStatusChange,
   toggleDeleting,
 } from "../global-redux/ManageContentSlice.jsx";
@@ -43,7 +42,7 @@ const ErrorAndSuccesDialog = () => {
   const navigate = useNavigate();
   const { userDetails } = useSelector(globalReduxSelector);
   const { mutate: updateModeratorStatus } = updateModeratorStatusMutation();
-  const { mutate: updateAdminStatus } = updateAdminStatusMutation();
+  const { mutate: updateAdminStatus } = updateAdminStatusMutation()
 
   const handleStatusChange = (e) => {
     if (userDetails?.role === "moderator") {

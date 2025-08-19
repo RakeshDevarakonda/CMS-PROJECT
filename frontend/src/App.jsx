@@ -15,7 +15,7 @@ import ErrorBoundary from "./utils/ErrorBoundary.jsx";
 
 export default function App() {
   const { errorAndSuccesDialog } = useSelector(globalReduxSelector);
-
+  
   return (
     <>
       <ErrorBoundary>

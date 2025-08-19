@@ -9,15 +9,12 @@ import {
 import { useEffect } from "react";
 import { FullPageLoader } from "./FullPageLoader.jsx";
 import { globalReduxSelector } from "../global-redux/GlobalRedux.jsx";
-import { useQueryClient } from "@tanstack/react-query";
 
 export const AuthComponent = ({ children }) => {
   const dispatch = useDispatch();
-  const { isAuthChecked, darkMode } = useSelector(globalReduxSelector);
+  const { isAuthChecked } = useSelector(globalReduxSelector);
 
   const { data: authData, isSuccess, isLoading, isError } = GetAuthQuery();
-
-  const queryClient = useQueryClient();
 
   const savedDarkMode = JSON.parse(localStorage.getItem("darkMode"));
 

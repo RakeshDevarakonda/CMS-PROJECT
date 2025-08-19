@@ -44,6 +44,11 @@ app.get("/", (req, res) => {
   res.redirect("https://cms-project-kappa.vercel.app");
 });
 
+
+app.get("/loaderio-f24c1d0e23a5806e931ebaf110281c4d.txt", (req, res) => {
+  res.send("loaderio-f24c1d0e23a5806e931ebaf110281c4d");
+});
+
 app.post("/api/addurls", upload.array("file"), async (req, res, next) => {
   const photos = req.files?.map((file) => file.path) || [];
   let uploadedImageUrls = [];
@@ -86,7 +91,7 @@ app.use("/api/admin", adminRouter);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
+app.listen(PORT,"0.0.0.0", () => {
   mongoosedatabse();
   console.log("Example app listening on port " + PORT + "!");
 });
